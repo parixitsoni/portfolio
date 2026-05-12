@@ -14,7 +14,7 @@ const CATEGORIES = ["All", "React", "Next.js", "CSS", "Coding", "JavaScript", "S
 const DIFFICULTIES = ["All", "Easy", "Medium", "Hard", "Expert"];
 
 export default function LearningClientPage({ initialData }) {
-  const [data, setData] = useState(initialData || []);
+  const [data, setData] = useState(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
@@ -24,6 +24,26 @@ export default function LearningClientPage({ initialData }) {
   const [isSaving, setIsSaving] = useState(false);
   const [newItem, setNewItem] = useState({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" });
 
+  // Persistence for live site
+  useEffect(() => {
+    const localEntries = localStorage.getItem('learning_vault_entries');
+    if (localEntries) {
+      try {
+        const parsed = JSON.parse(localEntries);
+        // Merge initial server data with local entries, avoiding duplicates
+        const merged = [...initialData];
+        parsed.forEach(local => {
+          if (!merged.find(m => m.id === local.id)) {
+            merged.unshift(local);
+          }
+        });
+        setData(merged);
+      } catch (e) {
+        console.error("Failed to load local entries", e);
+      }
+    }
+  }, [initialData]);
+
   const handleAdd = async (e) => {
     if (e) e.preventDefault();
     if (isSaving) return;
@@ -31,8 +51,9 @@ export default function LearningClientPage({ initialData }) {
     
     const payload = { 
       ...newItem, 
-      id: Date.now(), // Generate temporary ID for local view
-      companies: typeof newItem.companies === 'string' ? newItem.companies.split(",").map(c => c.trim()).filter(c => c) : [] 
+      id: `local-${Date.now()}`, 
+      companies: typeof newItem.companies === 'string' ? newItem.companies.split(",").map(c => c.trim()).filter(c => c) : [],
+      isLocal: true // Tag as local-only
     };
 
     try {
@@ -43,19 +64,26 @@ export default function LearningClientPage({ initialData }) {
       });
       
       if (res.ok) { 
-        setData(await res.json()); 
+        const updatedData = await res.json();
+        setData(updatedData); 
       } else {
-        // Fallback for static hosting (GitHub Pages)
-        // Add to local state so user sees it immediately
-        setData(prev => [payload, ...prev]);
+        // Fallback for static hosting (GitHub Pages/Vercel Export)
+        const updatedLocal = [payload, ...data];
+        setData(updatedLocal);
+        
+        // Persist to localStorage
+        const existingLocal = JSON.parse(localStorage.getItem('learning_vault_entries') || '[]');
+        localStorage.setItem('learning_vault_entries', JSON.stringify([payload, ...existingLocal]));
       }
       
       setShowAddModal(false); 
       setNewItem({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" }); 
     } catch (e) { 
       console.error(e); 
-      // Even on network error, show it locally for UX
-      setData(prev => [payload, ...prev]);
+      const updatedLocal = [payload, ...data];
+      setData(updatedLocal);
+      const existingLocal = JSON.parse(localStorage.getItem('learning_vault_entries') || '[]');
+      localStorage.setItem('learning_vault_entries', JSON.stringify([payload, ...existingLocal]));
       setShowAddModal(false);
       setNewItem({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" }); 
     } finally { 

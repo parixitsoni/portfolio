@@ -44,15 +44,19 @@ export const LearningItem = ({ item, isExpanded, onToggle }) => (
         <div className="space-y-12">
           {/* Metadata Bar */}
           <div className="flex flex-wrap items-center gap-6 pb-8 border-b border-slate-100 dark:border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center text-sky-600">
-                <Layers size={14} />
-              </div>
-              <div>
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Category</p>
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">{item.category}</p>
-              </div>
-            </div>
+            <div className="flex flex-wrap items-center gap-3">
+            <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-sm ${getDifficultyColor(item.difficulty)}`}>
+              {item.difficulty}
+            </span>
+            {item.isLocal && (
+              <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-sm">
+                Local Entry
+              </span>
+            )}
+            <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-white/5 shadow-sm">
+              {item.category}
+            </span>
+          </div>
             {item.difficulty && (
               <div className="flex items-center gap-3">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${difficultyColors[item.difficulty] === "red" ? "bg-red-50 text-red-500" : "bg-amber-50 text-amber-500"}`}>
