@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar } from "../../components/Navbar";
 import { Layers } from "lucide-react";
 import { LearningItem } from "../../components/Learning/LearningItem";
