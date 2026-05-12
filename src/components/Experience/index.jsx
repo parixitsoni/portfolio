@@ -3,7 +3,7 @@ import { experiences } from "./data";
 import { ExperienceCard } from "./ExperienceCard";
 
 export const Experience = () => (
-  <section id="experience" className="py-24 px-6 relative overflow-hidden">
+  <section id="experience" className="py-16 px-6 relative overflow-hidden">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-24">
         <h2 className="text-4xl md:text-7xl font-bold mb-6 text-slate-950 dark:text-white tracking-tight">Career Journey</h2>

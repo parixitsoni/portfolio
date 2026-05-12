@@ -4,7 +4,7 @@ import { skillClusters } from "./data";
 import { SkillCluster } from "./SkillCluster";
 
 export const Skills = () => (
-  <section id="skills" className="py-24 px-6 relative bg-transparent">
+  <section id="skills" className="py-16 px-6 relative bg-transparent">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-20">
         <h2 className="text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white tracking-tight leading-tight">
