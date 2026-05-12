@@ -1,0 +1,3 @@
+- [x] Start a conversation button is not showing proper in both dark and light mode.
+- [x] Dark and light mode all icons background color is not proper and there resprctive font color and not changing.
+- [x] all the content inside Career Journey are also not change based on dark and light mode. 

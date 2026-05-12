@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "question": "How does React's Reconciliation work?",
+    "theory": "React uses a virtual DOM to compare changes and only update the necessary parts of the real DOM. This process is called reconciliation. It uses a diffing algorithm with O(n) complexity by making assumptions about component types and keys.",
+    "companies": ["Google", "Meta", "Amazon", "Uber"],
+    "category": "React"
+  },
+  {
+    "id": 2,
+    "question": "Explain the difference between SSR and SSG in Next.js.",
+    "theory": "SSR (Server-Side Rendering) generates the HTML for each request. SSG (Static Site Generation) generates the HTML at build time and reuses it for each request. Next.js also supports ISR (Incremental Static Regeneration) for updating static content after build.",
+    "companies": ["Netflix", "Airbnb", "Vercel"],
+    "category": "Next.js"
+  }
+]
