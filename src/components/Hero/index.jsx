@@ -2,6 +2,7 @@ import React from "react";
 import { MapPin, ChevronDown } from "lucide-react";
 import { personalData } from "../../constants/personal-data";
 import { HeroProfile } from "./HeroProfile";
+import { getAssetPath } from "../../utils/paths";
 
 export const Hero = () => (
   <section id="home" className="min-h-screen flex items-center justify-center px-4 md:px-6 relative pt-20 pb-20">
@@ -26,8 +27,8 @@ export const Hero = () => (
         </p>
         
         <div className="flex flex-row items-center md:justify-start justify-center gap-2 sm:gap-6 animate-fadeInUp delay-200">
-          <a href={`mailto:${personalData.email}`} className="px-5 sm:px-10 py-4 sm:py-5 bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[11px] sm:text-base font-bold rounded-2xl shadow-xl border border-slate-900 dark:border-white/10 hover:scale-[1.02] transition-all whitespace-nowrap">
-            Get in Touch
+          <a href={getAssetPath("/Parixit_Soni_Resume.pdf")} download="Parixit_Soni_Resume.pdf" className="px-5 sm:px-10 py-4 sm:py-5 bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[11px] sm:text-base font-bold rounded-2xl shadow-xl border border-slate-900 dark:border-white/10 hover:scale-[1.02] transition-all whitespace-nowrap">
+            Download Resume
           </a>
           <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-4 sm:py-5 bg-white/10 dark:bg-white/5 rounded-2xl border border-slate-200/50 dark:border-white/10 backdrop-blur-md">
             <MapPin size={16} className="text-sky-500 shrink-0" />
