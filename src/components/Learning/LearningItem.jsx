@@ -29,7 +29,7 @@ export const LearningItem = ({ item, isExpanded, onToggle }) => (
             <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/5 text-[8px] font-black uppercase tracking-widest text-slate-500">{item.category}</span>
           </div>
         )}
-        <Typography variant="h4" className={`transition-all ${isExpanded ? "text-2xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white" : "text-base font-bold text-slate-700 dark:text-slate-300 group-hover:text-sky-600 dark:group-hover:text-sky-400"}`}>
+        <Typography variant="h4" className={`transition-all ${isExpanded ? "text-3xl md:text-5xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.95]" : "text-lg md:text-xl font-bold text-slate-700 dark:text-slate-300 group-hover:text-sky-600 dark:group-hover:text-sky-400"}`}>
           {item.question}
         </Typography>
       </div>
@@ -67,7 +67,7 @@ export const LearningItem = ({ item, isExpanded, onToggle }) => (
           </div>
 
           <div className="max-w-none">
-            <div className="text-slate-800 dark:text-slate-200 leading-relaxed text-base md:text-lg prose dark:prose-invert prose-slate max-w-full 
+            <div className="text-slate-800 dark:text-slate-200 leading-relaxed text-lg md:text-xl prose dark:prose-invert prose-slate max-w-full 
               prose-pre:bg-slate-950 prose-pre:p-4 prose-pre:rounded-2xl prose-pre:border prose-pre:border-white/10 prose-pre:overflow-x-auto
               prose-code:text-sky-600 dark:prose-code:text-sky-400 prose-code:bg-sky-500/5 prose-code:px-1.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
               prose-table:block prose-table:overflow-x-auto prose-table:border prose-table:border-slate-100 dark:prose-table:border-white/5 prose-table:rounded-2xl

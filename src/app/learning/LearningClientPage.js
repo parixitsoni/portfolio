@@ -46,16 +46,49 @@ export default function LearningClientPage({ initialData }) {
   });
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen selection:bg-sky-100 dark:selection:bg-sky-900/30">
       <Navbar />
-      <main className="p-4 md:p-12 bg-transparent relative z-10 pt-12 md:pt-20">
+      
+      {/* Immersive Header */}
+      <header className="pt-20 md:pt-32 pb-10 px-4">
         <div className="max-w-4xl mx-auto">
-          <SectionHeader badge="Private Knowledge Base" badgeIcon={Layers} title={<>Learning <span className="text-sky-600 dark:text-sky-400">Vault</span></>} subtitle="A private collection of technical theory and interview patterns." />
-          <div className="space-y-6 mb-10 animate-fadeInUp delay-100">
-            <LearningSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} showFilters={showFilters} setShowFilters={setShowFilters} setShowAddModal={setShowAddModal} />
-            <LearningFilters showFilters={showFilters} setShowFilters={setShowFilters} categories={CATEGORIES} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} difficulties={DIFFICULTIES} selectedDifficulty={selectedDifficulty} setSelectedDifficulty={setSelectedDifficulty} />
+          <SectionHeader 
+            badge="Technical Arsenal" 
+            badgeIcon={Layers} 
+            title={<>Learning <span className="text-sky-600 dark:text-sky-400">Vault</span></>} 
+            subtitle="A private repository of architectural patterns and implementation strategies." 
+          />
+        </div>
+      </header>
+
+      {/* Sticky Filter Bar */}
+      <div className="sticky top-[72px] z-40 px-4 mb-8">
+        <div className="max-w-4xl mx-auto glass-effect-premium p-3 md:p-4 rounded-[2rem] md:rounded-[2.5rem] border border-slate-200/60 dark:border-white/10 shadow-2xl backdrop-blur-3xl">
+          <div className="space-y-4">
+            <LearningSearch 
+              searchTerm={searchTerm} 
+              setSearchTerm={setSearchTerm} 
+              showFilters={showFilters} 
+              setShowFilters={setShowFilters} 
+              setShowAddModal={setShowAddModal} 
+            />
+            <LearningFilters 
+              showFilters={showFilters} 
+              setShowFilters={setShowFilters} 
+              categories={CATEGORIES} 
+              selectedCategory={selectedCategory} 
+              setSelectedCategory={setSelectedCategory} 
+              difficulties={DIFFICULTIES} 
+              selectedDifficulty={selectedDifficulty} 
+              setSelectedDifficulty={setSelectedDifficulty} 
+            />
           </div>
-          <div className="space-y-1 animate-fadeInUp delay-200 min-h-[400px] mb-20">
+        </div>
+      </div>
+
+      <main className="px-4 pb-24 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-1 animate-fadeInUp delay-200 min-h-[400px]">
             {filteredData.length > 0 ? filteredData.map(item => (
               <LearningItem key={item.id} item={item} isExpanded={expandedId === item.id} onToggle={() => setExpandedId(expandedId === item.id ? null : item.id)} />
             )) : <div className="text-center py-20 bg-slate-50 dark:bg-white/5 rounded-3xl"><Typography color="secondary" font="medium">No entries found matching your criteria.</Typography></div>}
