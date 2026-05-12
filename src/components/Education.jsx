@@ -31,22 +31,22 @@ export const Education = () => {
             {education.map((edu, idx) => (
               <div 
                 key={idx}
-                className="p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-8 group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors"
+                className="p-6 md:p-10 flex flex-row items-center gap-6 md:gap-8 group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors"
               >
-                <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform border border-slate-100 dark:border-white/5 shadow-sm">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform border border-slate-100 dark:border-white/5 shadow-sm">
                   {edu.icon}
                 </div>
                 
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 tracking-tight">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base md:text-xl font-bold text-slate-900 dark:text-white mb-0.5 md:mb-1 tracking-tight truncate">
                     {edu.degree}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 font-bold">
+                  <p className="text-[10px] md:text-sm text-slate-600 dark:text-slate-400 font-bold truncate">
                     {edu.institution}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest bg-slate-100/50 dark:bg-white/5 px-4 py-2 rounded-full border border-slate-100 dark:border-white/5">
+                <div className="hidden sm:flex items-center gap-2 text-slate-500 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest bg-slate-100/50 dark:bg-white/5 px-4 py-2 rounded-full border border-slate-100 dark:border-white/5">
                   <Calendar size={12} className="text-sky-500 dark:text-sky-400" />
                   {edu.period}
                 </div>

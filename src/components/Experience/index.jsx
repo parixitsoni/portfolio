@@ -6,7 +6,9 @@ export const Experience = () => (
   <section id="experience" className="py-16 px-6 relative overflow-hidden">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-24">
-        <h2 className="text-4xl md:text-7xl font-bold mb-6 text-slate-950 dark:text-white tracking-tight">Career Journey</h2>
+        <h2 className="text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white tracking-tight">
+          Career <span className="text-sky-600 dark:text-sky-400">Journey</span>
+        </h2>
         <p className="text-slate-700 dark:text-slate-400 text-lg max-w-2xl mx-auto font-medium">
           Professional trajectory focused on technical leadership and architecting enterprise-grade frontend systems.
         </p>
