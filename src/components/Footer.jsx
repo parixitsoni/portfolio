@@ -30,6 +30,11 @@ export const Footer = () => {
             © {currentYear} {personalData.name}
           </p>
 
+          <p className="text-slate-400 dark:text-slate-600 text-[10px] font-bold tracking-widest uppercase">
+            Built with vibe coding from{" "}
+            <span className="text-sky-500 dark:text-sky-400">Antigravity</span>
+          </p>
+
           <div className="flex items-center gap-8 text-slate-400">
             <a href={personalData.socials.linkedin} className="hover:text-sky-600 transition-colors">
               <Linkedin size={18} />
