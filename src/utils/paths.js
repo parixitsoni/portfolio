@@ -1,5 +1,5 @@
-const isProd = process.env.NODE_ENV === "production";
-const basePath = isProd ? "/portfolio" : "";
+const isGitHubPages = process.env.GITHUB_ACTIONS === "true" || (typeof window !== 'undefined' && window.location.hostname.includes('github.io'));
+const basePath = isGitHubPages ? "/portfolio" : "";
 
 export const getAssetPath = (path) => {
   if (path.startsWith("http") || path.startsWith("mailto:") || path.startsWith("tel:")) {
