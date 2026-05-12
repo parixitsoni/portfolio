@@ -74,7 +74,7 @@ export default function LearningClientPage({ initialData }) {
       <Navbar />
       
       {/* Immersive Header */}
-      <header className="pt-20 md:pt-32 pb-10 px-4">
+      <header className="pt-16 md:pt-24 pb-8 px-4">
         <div className="max-w-4xl mx-auto">
           <SectionHeader 
             badge="Technical Arsenal" 
@@ -86,8 +86,8 @@ export default function LearningClientPage({ initialData }) {
       </header>
 
       {/* Sticky Filter Bar */}
-      <div className="sticky top-[72px] z-40 px-4 mb-8">
-        <div className="max-w-4xl mx-auto glass-effect-premium p-3 md:p-4 rounded-[2rem] md:rounded-[2.5rem] border border-slate-200/60 dark:border-white/10 shadow-2xl backdrop-blur-3xl">
+      <div className="sticky top-[80px] z-40 px-2 md:px-4 mb-10">
+        <div className="max-w-4xl mx-auto glass-effect-premium p-2 md:p-4 rounded-[2rem] md:rounded-[2.5rem] border border-slate-200/60 dark:border-white/10 shadow-2xl backdrop-blur-3xl">
           <div className="space-y-4">
             <LearningSearch 
               searchTerm={searchTerm} 

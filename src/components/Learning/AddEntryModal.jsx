@@ -116,20 +116,16 @@ export const AddEntryModal = ({ show, onClose, newItem, setNewItem, onAdd, isSav
           onChange={(e) => setNewItem({...newItem, companies: e.target.value})}
         />
 
-        <div className="pt-2 space-y-4">
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-bold leading-relaxed">
-            ⚠️ NOTICE: Saving entries is only supported in the local development environment. 
-            Once you add a question locally, push it to GitHub to update the live site.
-          </div>
+        <div className="pt-2">
           <Button 
             type="submit" 
             variant="primary"
             size="xl"
             className="w-full"
             icon={PlusCircle}
-            disabled={isSaving || process.env.NODE_ENV === 'production'}
+            disabled={isSaving}
           >
-            {isSaving ? "Saving to Vault..." : process.env.NODE_ENV === 'production' ? "Save Disabled on Live Site" : "Save to Learning Vault"}
+            {isSaving ? "Saving to Vault..." : "Save to Learning Vault"}
           </Button>
         </div>
       </form>

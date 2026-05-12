@@ -25,13 +25,13 @@ export const Hero = () => (
           I specialize in crafting high-performance, accessible, and scalable web applications using React and Next.js.
         </p>
         
-        <div className="flex flex-col sm:flex-row items-center md:justify-start justify-center gap-6 animate-fadeInUp delay-200">
-          <a href={`mailto:${personalData.email}`} className="px-10 py-5 bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold rounded-2xl shadow-xl shadow-sky-500/10 dark:shadow-white/5 border border-slate-900 dark:border-white/10 hover:scale-[1.02] transition-all">
+        <div className="flex flex-row items-center md:justify-start justify-center gap-2 sm:gap-6 animate-fadeInUp delay-200">
+          <a href={`mailto:${personalData.email}`} className="px-5 sm:px-10 py-4 sm:py-5 bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[11px] sm:text-base font-bold rounded-2xl shadow-xl border border-slate-900 dark:border-white/10 hover:scale-[1.02] transition-all whitespace-nowrap">
             Get in Touch
           </a>
-          <div className="flex items-center gap-3 px-6 py-4 bg-white/10 dark:bg-white/5 rounded-2xl border border-slate-200/50 dark:border-white/10 backdrop-blur-md">
-            <MapPin size={18} className="text-sky-500" />
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{personalData.location}</span>
+          <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-4 sm:py-5 bg-white/10 dark:bg-white/5 rounded-2xl border border-slate-200/50 dark:border-white/10 backdrop-blur-md">
+            <MapPin size={16} className="text-sky-500 shrink-0" />
+            <span className="text-[9px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">{personalData.location}</span>
           </div>
         </div>
       </div>

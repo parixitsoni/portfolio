@@ -1,13 +1,14 @@
 import React from "react";
 import { Calendar, MapPin, ChevronRight } from "lucide-react";
 import { getDateRange, calculateDuration } from "../../utils/formatting";
+import { getAssetPath } from "../../utils/paths";
 
 export const ExperienceCard = ({ exp, idx }) => (
   <div className={`relative flex flex-col md:flex-row gap-12 ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
     <div className="absolute left-0 md:left-1/2 top-0 -translate-x-1/2 z-20 hidden md:block">
       <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-3 shadow-xl overflow-hidden group">
         <img 
-          src={exp.logo} 
+          src={getAssetPath(exp.logo)} 
           alt={exp.company} 
           className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
           onError={(e) => {
