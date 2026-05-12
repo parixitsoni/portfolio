@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Moon, Sun, Download } from "lucide-react";
 import { NAV_LINKS } from "./constants";
-import { personalData } from "../../constants/personal-data";
+import { getAssetPath } from "../../utils/paths";
 
 export const DesktopNav = ({ activeSection, scrolled, theme, toggleTheme }) => (
   <div className={`fixed top-0 left-0 right-0 z-[100] px-4 transition-all duration-500 hidden md:block ${scrolled ? "py-4 translate-y-2" : "py-8"}`}>
@@ -21,7 +21,7 @@ export const DesktopNav = ({ activeSection, scrolled, theme, toggleTheme }) => (
       <button onClick={toggleTheme} className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 dark:text-slate-400 transition-all">
         {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
       </button>
-      <a href="/portfolio/Parixit_Soni_Resume.pdf" download="Parixit_Soni_Resume.pdf" className="flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-300 bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold hover:scale-105 shadow-lg active:scale-95">
+      <a href={getAssetPath("/Parixit_Soni_Resume.pdf")} download="Parixit_Soni_Resume.pdf" className="flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-300 bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold hover:scale-105 shadow-lg active:scale-95">
         <Download size={18} />
         <span className="text-xs font-bold">Resume</span>
       </a>

@@ -1,4 +1,4 @@
-import React from "react";
+import { getAssetPath } from "../../utils/paths";
 
 export const HeroProfile = () => (
   <div className="relative group p-4">
@@ -9,7 +9,7 @@ export const HeroProfile = () => (
     <div className="relative w-64 h-72 md:w-80 md:h-[24rem] rounded-[3.5rem] p-2.5 glass-effect-premium border border-white/20 dark:border-white/5 relative z-10 shadow-2xl transition-all duration-700 overflow-hidden group-hover:scale-[1.02]">
       <div className="absolute inset-0 bg-gradient-to-tr from-sky-500/10 to-transparent z-0"></div>
       <img 
-        src="/portfolio/parixit_img.jpg" 
+        src={getAssetPath("/parixit_img.jpg")} 
         alt="Parixit Soni" 
         className="w-full h-full object-cover rounded-[3.5rem] grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110 mix-blend-multiply dark:mix-blend-normal opacity-90 group-hover:opacity-100"
       />
