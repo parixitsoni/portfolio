@@ -28,15 +28,39 @@ export default function LearningClientPage({ initialData }) {
     if (e) e.preventDefault();
     if (isSaving) return;
     setIsSaving(true);
-    const payload = { ...newItem, companies: typeof newItem.companies === 'string' ? newItem.companies.split(",").map(c => c.trim()).filter(c => c) : [] };
+    
+    const payload = { 
+      ...newItem, 
+      id: Date.now(), // Generate temporary ID for local view
+      companies: typeof newItem.companies === 'string' ? newItem.companies.split(",").map(c => c.trim()).filter(c => c) : [] 
+    };
+
     try {
-      const res = await fetch("/api/learning", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const res = await fetch("/api/learning", { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify(payload) 
+      });
+      
       if (res.ok) { 
         setData(await res.json()); 
-        setShowAddModal(false); 
-        setNewItem({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" }); 
+      } else {
+        // Fallback for static hosting (GitHub Pages)
+        // Add to local state so user sees it immediately
+        setData(prev => [payload, ...prev]);
       }
-    } catch (e) { console.error(e); } finally { setIsSaving(false); }
+      
+      setShowAddModal(false); 
+      setNewItem({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" }); 
+    } catch (e) { 
+      console.error(e); 
+      // Even on network error, show it locally for UX
+      setData(prev => [payload, ...prev]);
+      setShowAddModal(false);
+      setNewItem({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" }); 
+    } finally { 
+      setIsSaving(false); 
+    }
   };
 
   const filteredData = data.filter(item => {

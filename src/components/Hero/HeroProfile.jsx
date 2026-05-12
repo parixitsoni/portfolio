@@ -15,7 +15,7 @@ export const HeroProfile = () => {
         <img 
           src={getAssetPath("/parixit_img.jpg")} 
           alt="Parixit Soni" 
-          className={`w-full h-full object-cover rounded-[3.5rem] transition-all duration-700 scale-105 group-hover:scale-110 mix-blend-multiply dark:mix-blend-normal opacity-90 group-hover:opacity-100 ${theme === 'dark' ? 'grayscale group-hover:grayscale-0' : 'grayscale-0'}`}
+          className={`w-full h-full object-cover rounded-[3.5rem] transition-all duration-700 scale-105 group-hover:scale-110 mix-blend-multiply dark:mix-blend-normal opacity-90 group-hover:opacity-100 ${theme === 'dark' ? 'grayscale' : 'grayscale-0'}`}
         />
       </div>
       
