@@ -1,14 +1,21 @@
 import React from "react";
 
 export const HeroProfile = () => (
-  <div className="relative animate-fadeInUp delay-300 group">
-    <div className="w-64 h-64 md:w-80 md:h-80 rounded-[4rem] p-3 glass-effect-premium border border-slate-200 dark:border-white/10 relative z-10 rotate-3 group-hover:rotate-0 transition-all duration-700 overflow-hidden shadow-2xl">
+  <div className="relative group p-4">
+    {/* Floating Decorative Rings */}
+    <div className="absolute -inset-4 border border-sky-500/10 rounded-[5rem] animate-[spin_20s_linear_infinite]"></div>
+    <div className="absolute -inset-8 border border-blue-500/5 rounded-[6rem] animate-[spin_30s_linear_infinite_reverse]"></div>
+    
+    <div className="relative w-64 h-72 md:w-80 md:h-[24rem] rounded-[3.5rem] p-2.5 glass-effect-premium border border-white/20 dark:border-white/5 relative z-10 shadow-2xl transition-all duration-700 overflow-hidden group-hover:scale-[1.02]">
+      <div className="absolute inset-0 bg-gradient-to-tr from-sky-500/10 to-transparent z-0"></div>
       <img 
         src="/parixit_img.jpg" 
         alt="Parixit Soni" 
-        className="w-full h-full object-cover rounded-[3.5rem] grayscale group-hover:grayscale-0 transition-all duration-700 scale-110"
+        className="w-full h-full object-cover rounded-[3.5rem] grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110 mix-blend-multiply dark:mix-blend-normal opacity-90 group-hover:opacity-100"
       />
     </div>
-    <div className="absolute inset-0 border-2 border-sky-600/20 dark:border-sky-400/20 rounded-[4rem] -rotate-3 scale-105 translate-x-4 translate-y-4 -z-10 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700"></div>
+    
+    {/* Accent Element */}
+    <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-sky-600/10 rounded-full blur-3xl -z-10 group-hover:bg-sky-500/20 transition-all"></div>
   </div>
 );

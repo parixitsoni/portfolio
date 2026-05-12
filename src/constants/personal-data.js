@@ -4,7 +4,10 @@ export const personalData = {
   email: "parikshitsoni85@gmail.com",
   phone: "+91-759-719-1971",
   location: "Udaipur, Rajasthan",
-  linkedin: "https://linkedin.com/in/parixitsoni",
+  socials: {
+    linkedin: "https://linkedin.com/in/parixitsoni",
+    github: "https://github.com/parixitsoni"
+  },
   summary: "Senior Frontend Developer with 4+ years of experience building performant, accessible, and scalable web applications using React.js and Next.js.",
   resumeUrl: "/Parixit_Soni_Resume.pdf"
 };

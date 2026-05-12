@@ -1,5 +1,5 @@
 import React from "react";
-import { personalData } from "../config";
+import { personalData } from "../constants/personal-data";
 import { Linkedin, ArrowUp, Github, Send } from "lucide-react";
 
 export const Footer = () => {

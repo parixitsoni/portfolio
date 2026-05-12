@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth custom-scrollbar relative z-0 bg-white dark:bg-slate-950">
+      <main className="overflow-x-hidden relative z-10">
         <Hero />
         <About />
         <Experience />

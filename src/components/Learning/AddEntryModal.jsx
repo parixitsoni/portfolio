@@ -1,33 +1,134 @@
-import React from "react";
-import { X, PlusCircle } from "lucide-react";
+import React, { useState } from "react";
+import { PlusCircle } from "lucide-react";
+import { Modal } from "../UI/Modal";
+import { Input } from "../UI/Input";
+import { Button } from "../UI/Button";
+import { Typography } from "../UI/Typography";
 
-export const AddEntryModal = ({ show, onClose, newItem, setNewItem, onAdd }) => {
-  if (!show) return null;
+const CATEGORIES = ["React", "Next.js", "CSS", "Coding", "JavaScript", "System Design"];
+const DIFFICULTIES = ["Easy", "Medium", "Hard", "Expert"];
+
+export const AddEntryModal = ({ show, onClose, newItem, setNewItem, onAdd, isSaving }) => {
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    if (!newItem.question.trim()) newErrors.question = "Question is required";
+    if (!newItem.theory.trim()) newErrors.theory = "Theory/Explanation is required";
+    if (!newItem.category) newErrors.category = "Category is required";
+    if (!newItem.difficulty) newErrors.difficulty = "Difficulty is required";
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validate()) {
+      try {
+        await onAdd(e);
+        setErrors({});
+      } catch (err) {
+        console.error("Submit Error:", err);
+      }
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-950/20 backdrop-blur-md animate-fadeIn">
-      <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[3rem] p-10 shadow-2xl border border-slate-200 dark:border-white/10 animate-scaleIn">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Add Entry</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full transition-all"><X size={24} /></button>
+    <Modal isOpen={show} onClose={onClose} title="Add New Entry">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Input 
+          label="Question"
+          required
+          placeholder="e.g., What is closure in JS?"
+          value={newItem.question}
+          error={errors.question}
+          onChange={(e) => setNewItem({...newItem, question: e.target.value})}
+        />
+
+        <Input 
+          label="Theory (Markdown Supported)"
+          required
+          multiline
+          rows={5}
+          placeholder="Enter detailed explanation..."
+          value={newItem.theory}
+          error={errors.theory}
+          onChange={(e) => setNewItem({...newItem, theory: e.target.value})}
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3 px-1">
+              Category <span className="text-red-500">*</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setNewItem({...newItem, category: cat})}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider border transition-all ${
+                    newItem.category === cat 
+                      ? 'bg-sky-500 border-sky-500 text-white shadow-lg shadow-sky-500/20' 
+                      : 'bg-transparent border-slate-200 dark:border-white/10 text-slate-500 hover:border-sky-500/50'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            {errors.category && (
+              <Typography variant="error" className="mt-2 px-1">{errors.category}</Typography>
+            )}
+          </div>
+
+          <div>
+            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-3 px-1">
+              Difficulty <span className="text-red-500">*</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {DIFFICULTIES.map(level => (
+                <button
+                  key={level}
+                  type="button"
+                  onClick={() => setNewItem({...newItem, difficulty: level})}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider border transition-all ${
+                    newItem.difficulty === level 
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white' 
+                      : 'bg-transparent border-slate-200 dark:border-white/10 text-slate-500 hover:border-slate-900/50 dark:hover:border-white/50'
+                  }`}
+                >
+                  {level}
+                </button>
+              ))}
+            </div>
+            {errors.difficulty && (
+              <Typography variant="error" className="mt-2 px-1">{errors.difficulty}</Typography>
+            )}
+          </div>
         </div>
-        <form onSubmit={onAdd} className="space-y-6">
-          <div>
-            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 px-1">Question</label>
-            <input required type="text" className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-2xl focus:outline-none focus:border-sky-500 transition-all text-slate-900 dark:text-white" placeholder="e.g., What is closure?" value={newItem.question} onChange={(e) => setNewItem({...newItem, question: e.target.value})} />
-          </div>
-          <div>
-            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 px-1">Theory (Markdown Supported)</label>
-            <textarea required rows="4" className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-2xl focus:outline-none focus:border-sky-500 transition-all text-slate-900 dark:text-white resize-none" placeholder="Enter detailed explanation..." value={newItem.theory} onChange={(e) => setNewItem({...newItem, theory: e.target.value})} />
-          </div>
-          <div>
-            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 px-1">Companies (comma separated)</label>
-            <input type="text" className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-2xl focus:outline-none focus:border-sky-500 transition-all text-slate-900 dark:text-white" placeholder="e.g., Google, Amazon" value={newItem.companies} onChange={(e) => setNewItem({...newItem, companies: e.target.value})} />
-          </div>
-          <button type="submit" className="w-full py-5 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-sky-600/20 flex items-center justify-center gap-2">
-            <PlusCircle size={20} />Save to Vault
-          </button>
-        </form>
-      </div>
-    </div>
+
+        <Input 
+          label="Companies (comma separated)"
+          placeholder="e.g., Google, Amazon, Microsoft"
+          value={newItem.companies}
+          onChange={(e) => setNewItem({...newItem, companies: e.target.value})}
+        />
+
+        <div className="pt-2">
+          <Button 
+            type="submit" 
+            variant="primary"
+            size="xl"
+            className="w-full"
+            icon={PlusCircle}
+            disabled={isSaving}
+          >
+            {isSaving ? "Saving to Vault..." : "Save to Learning Vault"}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 };

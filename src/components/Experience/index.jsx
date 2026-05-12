@@ -12,7 +12,8 @@ export const Experience = () => (
         </p>
       </div>
       <div className="relative">
-        <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-white/20 md:-translate-x-1/2"></div>
+        <div className="absolute left-[15px] md:left-1/2 top-0 bottom-0 w-[4px] bg-sky-500/20 md:-translate-x-1/2 blur-[2px]"></div>
+        <div className="absolute left-[16px] md:left-1/2 top-0 bottom-0 w-[2px] bg-sky-500/80 md:-translate-x-1/2"></div>
         <div className="space-y-24">
           {experiences.map((exp, idx) => (
             <ExperienceCard key={idx} exp={exp} idx={idx} />
