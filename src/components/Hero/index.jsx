@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, ChevronDown } from "lucide-react";
-import { personalData } from "../../config";
+import { personalData } from "../../constants/personal-data";
 import { HeroProfile } from "./HeroProfile";
 
 export const Hero = () => (
