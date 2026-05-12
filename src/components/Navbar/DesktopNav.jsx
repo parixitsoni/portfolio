@@ -18,9 +18,6 @@ export const DesktopNav = ({ activeSection, scrolled, theme, toggleTheme }) => (
         </Link>
       ))}
       <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-2"></div>
-      <button onClick={toggleTheme} className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 dark:text-slate-400 transition-all">
-        {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-      </button>
       <a href={getAssetPath("/Parixit_Soni_Resume.pdf")} download="Parixit_Soni_Resume.pdf" className="flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-300 bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold hover:scale-105 shadow-lg active:scale-95">
         <Download size={18} />
         <span className="text-xs font-bold">Resume</span>

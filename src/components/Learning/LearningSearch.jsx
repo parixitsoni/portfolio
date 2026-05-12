@@ -27,14 +27,6 @@ export const LearningSearch = ({
       </div>
       <div className="flex gap-2">
         <Button 
-          onClick={toggleTheme}
-          variant="outline"
-          size="icon"
-          className="w-12 h-12 md:w-14 md:h-14 rounded-2xl md:rounded-3xl flex-shrink-0 border-2 border-slate-200 dark:border-white/10"
-        >
-          {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-        </Button>
-        <Button 
           onClick={() => setShowFilters(!showFilters)} 
           variant={showFilters ? "primary" : "outline"}
           size="icon"

@@ -17,13 +17,6 @@ export const HeroProfile = () => {
           alt="Parixit Soni" 
           className={`w-full h-full object-cover rounded-[3.5rem] transition-all duration-700 scale-105 group-hover:scale-110 mix-blend-multiply dark:mix-blend-normal opacity-90 group-hover:opacity-100 ${theme === 'dark' ? 'grayscale group-hover:grayscale-0' : 'grayscale-0'}`}
         />
-        
-        {/* Click Feedback Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-sky-500/10 backdrop-blur-[2px]">
-          <span className="bg-white/90 dark:bg-slate-900/90 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-sky-600 shadow-xl border border-sky-500/20">
-            Toggle {theme === 'light' ? 'Dark' : 'Light'}
-          </span>
-        </div>
       </div>
       
       {/* Accent Element */}
