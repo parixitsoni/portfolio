@@ -1,28 +1,26 @@
 import React from "react";
-import { Book, ChevronDown, Layers, Building2, Briefcase, Zap } from "lucide-react";
+import { ChevronDown, Building2, Zap } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Card } from "../UI/Card";
-import { Badge } from "../UI/Badge";
 import { Typography } from "../UI/Typography";
 
-const difficultyColors = {
-  Easy: "green",
-  Medium: "sky",
-  Hard: "red",
-  Expert: "red"
+const difficultyStyle = {
+  Easy:   "border-green-200  bg-green-50/50  text-green-700  dark:border-green-500/20 dark:bg-green-900/20 dark:text-green-400",
+  Medium: "border-sky-200    bg-sky-50/50    text-sky-700    dark:border-sky-500/20   dark:bg-sky-900/20   dark:text-sky-400",
+  Hard:   "border-red-200    bg-red-50/50    text-red-700    dark:border-red-500/20   dark:bg-red-900/20   dark:text-red-400",
+  Expert: "border-red-300    bg-red-100/50   text-red-800    dark:border-red-500/30   dark:bg-red-900/30   dark:text-red-300",
 };
 
 export const LearningItem = ({ item, isExpanded, onToggle }) => (
   <div className={`transition-all duration-500 ${isExpanded ? "py-8 md:py-12 border-y border-slate-100 dark:border-white/5 bg-white/40 dark:bg-slate-900/40" : "border-b border-slate-50 dark:border-white/5 last:border-0"}`}>
-    <div 
+    <div
       className={`px-4 md:px-6 cursor-pointer flex items-start gap-4 group transition-all ${isExpanded ? "mb-10" : "py-6 hover:bg-sky-500/[0.02]"}`}
       onClick={onToggle}
     >
       <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs transition-colors ${isExpanded ? "bg-sky-600 text-white" : "bg-slate-100 dark:bg-white/5 text-sky-600"}`}>
         Q.
       </div>
-      
+
       <div className="flex-1 min-w-0">
         {!isExpanded && (
           <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -38,35 +36,24 @@ export const LearningItem = ({ item, isExpanded, onToggle }) => (
         <ChevronDown size={18} />
       </div>
     </div>
-    
+
     {isExpanded && (
       <div className="px-4 md:px-12 animate-fadeInUp">
         <div className="space-y-12">
           {/* Metadata Bar */}
-          <div className="flex flex-wrap items-center gap-6 pb-8 border-b border-slate-100 dark:border-white/5">
-            <div className="flex flex-wrap items-center gap-3">
-            <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-sm ${getDifficultyColor(item.difficulty)}`}>
-              {item.difficulty}
-            </span>
-            {item.isLocal && (
-              <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-sm">
-                Local Entry
+          <div className="flex flex-wrap items-center gap-3 pb-8 border-b border-slate-100 dark:border-white/5">
+            {item.difficulty && (
+              <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-sm ${difficultyStyle[item.difficulty] || difficultyStyle.Medium}`}>
+                {item.difficulty}
               </span>
             )}
             <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-white/5 shadow-sm">
               {item.category}
             </span>
-          </div>
-            {item.difficulty && (
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${difficultyColors[item.difficulty] === "red" ? "bg-red-50 text-red-500" : "bg-amber-50 text-amber-500"}`}>
-                  <Zap size={14} />
-                </div>
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Difficulty</p>
-                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">{item.difficulty}</p>
-                </div>
-              </div>
+            {item.isLocal && (
+              <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-sm">
+                💾 Saved Locally
+              </span>
             )}
           </div>
 
@@ -80,7 +67,7 @@ export const LearningItem = ({ item, isExpanded, onToggle }) => (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.theory}</ReactMarkdown>
             </div>
           </div>
-          
+
           {item.companies?.length > 0 && (
             <div className="pt-8 border-t border-slate-100 dark:border-white/5">
               <Typography variant="caption" color="sky" className="flex items-center gap-2 mb-4">
