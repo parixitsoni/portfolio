@@ -13,7 +13,6 @@ const PROJECTS = [
     description:
       "A high-fidelity medical & clinical management system built to centralize patient oversight, compliance tracking, inventory control, and financial operations — all in a single real-time command interface.",
     stack: ["Next.js", "React", "Tailwind CSS", "Recharts", "Framer Motion"],
-    accent: "sky",
     highlights: [
       { icon: LayoutDashboard, label: "Command Overview",  desc: "Live KPIs and operational trend charts" },
       { icon: Users,           label: "Patient Directory", desc: "Real-time patient status tracking" },
@@ -33,7 +32,6 @@ const PROJECTS = [
     description:
       "A sleek, high-performance product listing application with dynamic filtering, real-time search, category navigation, and a responsive card-based UI — demonstrating advanced React state management patterns.",
     stack: ["React", "CSS Modules", "REST API", "Vite"],
-    accent: "indigo",
     highlights: [
       { icon: ShoppingBag, label: "Product Cards",    desc: "Elegant card grid with images & ratings" },
       { icon: Filter,      label: "Live Filtering",   desc: "Multi-category and price-range filters" },
@@ -43,15 +41,9 @@ const PROJECTS = [
   },
 ];
 
-const accentMap = {
-  sky:   { badge: "bg-sky-500/10 border-sky-500/20 text-sky-600 dark:text-sky-400", btn: "bg-sky-600 hover:bg-sky-500 shadow-sky-500/20", ring: "hover:border-sky-300 dark:hover:border-sky-500/40", icon: "bg-sky-500/10 group-hover:bg-sky-500/20 text-sky-600 dark:text-sky-400" },
-  indigo:{ badge: "bg-indigo-500/10 border-indigo-500/20 text-indigo-600 dark:text-indigo-400", btn: "bg-indigo-600 hover:bg-indigo-500 shadow-indigo-500/20", ring: "hover:border-indigo-300 dark:hover:border-indigo-500/40", icon: "bg-indigo-500/10 group-hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" },
-};
-
 export const Projects = () => {
   const [active, setActive] = useState("hsl");
   const project = PROJECTS.find((p) => p.id === active);
-  const accent = accentMap[project.accent];
 
   return (
     <section id="projects" className="py-16 px-4 md:px-6 relative bg-transparent">
@@ -59,7 +51,7 @@ export const Projects = () => {
 
         {/* Section Header */}
         <div className="text-center mb-12">
-          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-[11px] font-black uppercase tracking-widest mb-5 ${accent.badge}`}>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-[11px] font-black uppercase tracking-widest mb-5">
             <Star size={12} className="fill-current" />
             Proudly Built
           </div>
@@ -73,18 +65,19 @@ export const Projects = () => {
 
         {/* Project Tabs */}
         <div className="flex justify-center gap-3 mb-10">
-          {PROJECTS.map((p) => {
-            const a = accentMap[p.accent];
-            return (
-              <button
-                key={p.id}
-                onClick={() => setActive(p.id)}
-                className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider border transition-all ${active === p.id ? `${a.badge} border-current scale-105 shadow-lg` : "border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20"}`}
-              >
-                {p.title.split(" ")[0]} {p.title.split(" ")[1]}
-              </button>
-            );
-          })}
+          {PROJECTS.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setActive(p.id)}
+              className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider border transition-all ${
+                active === p.id
+                  ? "bg-sky-500/10 border-sky-500/20 text-sky-600 dark:text-sky-400 scale-105 shadow-lg"
+                  : "border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20"
+              }`}
+            >
+              {p.title.split(" ").slice(0, 2).join(" ")}
+            </button>
+          ))}
         </div>
 
         {/* Main Card */}
@@ -106,7 +99,7 @@ export const Projects = () => {
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-[10px] font-black uppercase tracking-wider transition-all hover:scale-105 shadow-lg ${accent.btn}`}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-[10px] font-black uppercase tracking-wider transition-all hover:scale-105 shadow-lg bg-sky-600 hover:bg-sky-500 shadow-sky-500/20"
             >
               <ExternalLink size={13} />
               Live Demo
@@ -121,7 +114,6 @@ export const Projects = () => {
               className="w-full object-cover object-top"
               style={{ maxHeight: "340px" }}
             />
-            {/* Gradient fade at bottom */}
             <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white dark:from-[#020617] to-transparent pointer-events-none"></div>
           </div>
 
@@ -130,13 +122,13 @@ export const Projects = () => {
 
             {/* Left */}
             <div>
-              <div className={`inline-block px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border mb-4 ${accent.badge}`}>
+              <div className="inline-block px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border mb-4 bg-sky-500/10 border-sky-500/20 text-sky-600 dark:text-sky-400">
                 {project.category}
               </div>
               <h3 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">
                 {project.title}
               </h3>
-              <p className={`text-xs font-black uppercase tracking-widest mb-5 ${accentMap[project.accent].badge.split(" ").filter(c => c.includes("text-")).join(" ")}`}>
+              <p className="text-xs font-black uppercase tracking-widest mb-5 text-sky-600 dark:text-sky-400">
                 {project.subtitle}
               </p>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-8 text-sm md:text-base">
@@ -157,8 +149,8 @@ export const Projects = () => {
             {/* Right — highlights */}
             <div className="grid grid-cols-2 gap-3">
               {project.highlights.map(({ icon: Icon, label, desc }) => (
-                <div key={label} className={`p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 transition-all group ${accent.ring}`}>
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center mb-3 transition-colors ${accent.icon}`}>
+                <div key={label} className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 hover:border-sky-300 dark:hover:border-sky-500/40 transition-all group">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-3 transition-colors bg-sky-500/10 group-hover:bg-sky-500/20 text-sky-600 dark:text-sky-400">
                     <Icon size={15} />
                   </div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white mb-1 leading-tight">{label}</p>

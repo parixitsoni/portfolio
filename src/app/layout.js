@@ -15,7 +15,11 @@ const outfit = Outfit({
 
 export const metadata = {
   title: "Parixit Soni - Senior Frontend Developer",
-  description: "Portfolio of Parixit Soni - Senior Frontend Developer",
+  description: "Portfolio of Parixit Soni - Senior Frontend Developer specializing in React.js & Next.js",
+  icons: {
+    icon: "/ps-logo.png",
+    apple: "/ps-logo.png",
+  },
 };
 
 export default function RootLayout({ children }) {
