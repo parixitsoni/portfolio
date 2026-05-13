@@ -1,5 +1,6 @@
 import React from "react";
 import { NAV_LINKS } from "./constants";
+import { getAssetPath } from "../../utils/paths";
 
 const handleNavClick = (e, href) => {
   // Only intercept hash links (same-page anchors)
