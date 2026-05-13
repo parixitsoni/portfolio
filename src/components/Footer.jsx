@@ -13,10 +13,10 @@ export const Footer = () => {
             Let's build something <span className="text-sky-600 dark:text-sky-400">extraordinary.</span>
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-            I'm currently open to new opportunities and interesting projects. 
+            I'm currently open to new opportunities and interesting projects.
           </p>
-          
-          <a 
+
+          <a
             href={`mailto:${personalData.email}`}
             className="inline-flex items-center gap-3 px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-2xl hover:scale-105 transition-all shadow-xl shadow-black/10 dark:shadow-white/5"
           >
@@ -30,10 +30,10 @@ export const Footer = () => {
             © {currentYear} {personalData.name}
           </p>
 
-          <p className="text-slate-400 dark:text-slate-600 text-[10px] font-bold tracking-widest uppercase">
+          {/* <p className="text-slate-400 dark:text-slate-600 text-[10px] font-bold tracking-widest uppercase">
             Built with vibe coding from{" "}
             <span className="text-sky-500 dark:text-sky-400">Antigravity</span>
-          </p>
+          </p> */}
 
           <div className="flex items-center gap-8 text-slate-400">
             <a href={personalData.socials.linkedin} className="hover:text-sky-600 transition-colors">
