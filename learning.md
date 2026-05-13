@@ -1,8 +1,15 @@
-# Frontend Learning Notes
+# Frontend Learning Notes — Parixit Soni
+
+> Frontend Developer | React.js & Next.js Specialist
+> Last Updated: May 2026
+
+---
 
 ## React
 
 ### useEffect
+**Complexity:** ⭐⭐ | **Company Level:** Mid-level
+
 **Concept:** Side effects handle karne ke liye — API calls, timers, subscriptions.
 
 **3 cases:**
@@ -22,7 +29,9 @@ useEffect(() => {
 
 ---
 
-### useState
+### useState — Batching
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
 **Concept:** Component ka local state manage karna.
 
 **Batching — React 18:**
@@ -35,20 +44,27 @@ setName("Parixit"); // skip
 setName("Parixit");
 setAge(25);
 
-// Functional update — latest value ke liye
-setCount(prev => prev + 1); // hamesha latest value
+// Functional update — latest value ke liye (stale state fix)
+setCount(prev => prev + 1); // correct
 setCount(prev => prev + 1); // 0 → 1 → 2
+
+// Stale problem
+setCount(count + 1); // 0 → 1
+setCount(count + 1); // 0 → 1 — result: 1 ❌
 ```
 
 ---
 
 ### useCallback vs useMemo vs React.memo
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
 
 | Hook | Kya karta hai | Kab use karo |
 |------|--------------|--------------|
 | `React.memo` | Component memoize | Parent re-render pe child rokna |
 | `useCallback` | Function memoize | Child ko same function reference dena |
 | `useMemo` | Value memoize | Expensive calculation cache karna |
+
+> **Rule:** React.memo = component | useCallback = function | useMemo = value
 
 ```js
 // React.memo — component wrap
@@ -63,14 +79,27 @@ const filtered = useMemo(() => items.filter(i => i.active), [items]);
 
 ---
 
-### Redux Toolkit vs Context API
+### React Strict Mode
+**Complexity:** ⭐⭐ | **Company Level:** Mid-level
 
-| | Context API | Redux Toolkit |
-|--|-------------|---------------|
-| Setup | Zero | Simple |
-| Re-renders | Sab re-render hote hain | Sirf relevant component |
-| DevTools | No | Yes |
-| Use case | Simple state (theme, lang) | Complex state (large apps) |
+- Development mein useEffect **2 baar** run karta hai
+- Production pe koi effect nahi
+- Deprecated methods detect karta hai
+
+---
+
+## Redux & State Management
+
+### Redux Toolkit vs Context API
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
+| | Context API | Redux | Redux Toolkit |
+|--|-------------|-------|---------------|
+| Setup | Zero | Heavy | Simple |
+| Re-renders | Sab re-render | Selective | Selective |
+| DevTools | No | Yes | Yes |
+| Boilerplate | Low | High | Low |
+| Use case | Theme, lang | Complex state | Complex state |
 
 **createSlice:**
 ```js
@@ -102,6 +131,7 @@ dispatch(login({ name: "Parixit" }));
 ---
 
 ### Redux Thunk vs Saga
+**Complexity:** ⭐⭐⭐⭐ | **Company Level:** Senior / MNC
 
 | | Thunk | Saga |
 |--|-------|------|
@@ -115,20 +145,34 @@ const fetchUser = createAsyncThunk('user/fetch', async (id) => {
   const res = await fetch(`/api/user/${id}`);
   return res.json();
 });
+
+// Saga — generator function
+function* fetchUserSaga(action) {
+  try {
+    const user = yield call(fetchUser, action.payload);
+    yield put(fetchSuccess(user));
+  } catch(err) {
+    yield put(fetchFailed(err));
+  }
+}
 ```
 
 ---
 
-### React Strict Mode
-- Development mein useEffect **2 baar** run karta hai
-- Production pe koi effect nahi
-- Deprecated methods detect karta hai
+### Same State Dispatch — Re-render Hoga?
+**Complexity:** ⭐⭐⭐⭐ | **Company Level:** MNC
+
+| | Primitive same | Object same |
+|---|---|---|
+| useState | No re-render | Re-render (naya reference) |
+| Redux Toolkit | No re-render | No re-render (shallow compare) |
 
 ---
 
 ## Next.js
 
 ### Rendering Patterns
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
 
 | Pattern | Full Form | Kab |
 |---------|-----------|-----|
@@ -140,17 +184,23 @@ const fetchUser = createAsyncThunk('user/fetch', async (id) => {
 ---
 
 ### Token Storage
-```
-LocalStorage  — XSS risk ❌
-Cookies       — httpOnly + sameSite = secure ✅
-Memory/State  — page refresh pe gone ❌
-```
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
+| Storage | XSS Safe | Refresh Safe |
+|---------|----------|--------------|
+| localStorage | No ❌ | Yes |
+| Cookie (httpOnly) | Yes ✅ | Yes |
+| Memory/State | Yes ✅ | No ❌ |
+
+> httpOnly cookie — JavaScript access nahi kar sakti — best option for tokens.
 
 ---
 
 ## JavaScript
 
 ### Event Loop
+**Complexity:** ⭐⭐⭐⭐ | **Company Level:** MNC
+
 ```
 Call Stack → khaali hua?
     ↓
@@ -165,11 +215,16 @@ setTimeout(() => console.log("2"), 0);
 Promise.resolve().then(() => console.log("3"));
 console.log("4");
 // Output: 1, 4, 3, 2
+// Kyun: 1,4 sync | 3 microtask | 2 callback queue
 ```
 
 ---
 
 ### Closures
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
+**Short note:** Inner function outer function ke variables access karta hai — even after outer function complete ho jaaye.
+
 ```js
 function counter() {
   let count = 0;
@@ -181,11 +236,14 @@ function counter() {
 const increment = counter();
 increment(); // 1
 increment(); // 2 — count abhi bhi accessible hai
+increment(); // 3
 ```
 
 ---
 
 ### Promises
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
 ```js
 // Promise.all — ek fail = sab fail
 Promise.all([api1(), api2()]).then(results => {});
@@ -202,6 +260,8 @@ Promise.allSettled([api1(), api2()]).then(results => {
 ---
 
 ### var vs let vs const
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
 ```js
 // var — function scoped, hoisted
 // let — block scoped
@@ -216,15 +276,22 @@ for (var i = 0; i < 3; i++) {
   setTimeout(() => console.log(i), 1000); // 3, 3, 3 ❌
 }
 
-// Fix — let use karo
+// Fix 1 — let use karo
 for (let i = 0; i < 3; i++) {
   setTimeout(() => console.log(i), 1000); // 0, 1, 2 ✅
+}
+
+// Fix 2 — IIFE
+for (var i = 0; i < 3; i++) {
+  ((j) => setTimeout(() => console.log(j), 1000))(i); // 0, 1, 2 ✅
 }
 ```
 
 ---
 
 ### Primitive vs Reference Types
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
 ```
 Primitive — string, number, boolean, null, undefined
   → direct value store hoti hai
@@ -238,6 +305,8 @@ Reference — array, object, function
 ---
 
 ### this — Regular vs Arrow Function
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
 ```js
 // Regular — this caller pe depend karta hai
 const obj = {
@@ -245,7 +314,7 @@ const obj = {
   greet: function() { console.log(this.name); } // "Parixit"
 };
 
-// Arrow — this parent scope se aata hai
+// Arrow — this parent scope se aata hai (lexical)
 const obj2 = {
   name: "Parixit",
   greet: () => { console.log(this.name); } // undefined
@@ -255,6 +324,14 @@ const obj2 = {
 ---
 
 ### map vs forEach
+**Complexity:** ⭐⭐ | **Company Level:** Mid-level
+
+| | map | forEach |
+|---|---|---|
+| Return | Naya array | undefined |
+| Chaining | Yes | No |
+| Use case | Transform data | Side effects |
+
 ```js
 // map — naya array return karta hai
 [1,2,3].map(n => n * 2); // [2, 4, 6]
@@ -266,21 +343,40 @@ const obj2 = {
 ---
 
 ### typeof
+**Complexity:** ⭐⭐ | **Company Level:** Mid-level
+
 ```js
-typeof null        // "object" — JS bug
+typeof null        // "object" — JS bug!
 typeof undefined   // "undefined"
 typeof []          // "object"
 typeof {}          // "object"
 typeof ""          // "string"
 typeof 42          // "number"
 typeof true        // "boolean"
+typeof function(){} // "function"
 ```
+
+---
+
+### === vs ==
+**Complexity:** ⭐⭐ | **Company Level:** Mid-level
+
+```js
+"5" == 5   // true  — type convert karta hai (loose equality)
+"5" === 5  // false — type check bhi karta hai (strict equality)
+null == undefined  // true
+null === undefined // false
+```
+
+> **Rule:** Hamesha `===` use karo unless type coercion deliberately chahiye.
 
 ---
 
 ## CSS
 
 ### Flexbox vs Grid
+**Complexity:** ⭐⭐ | **Company Level:** Mid-level
+
 ```
 Flexbox — 1D — row ya column
 Grid    — 2D — rows aur columns dono
@@ -297,40 +393,47 @@ Grid    — 2D — rows aur columns dono
 ---
 
 ### Position
-```
-relative  — apni jagah se shift, space rehti hai
-absolute  — nearest positioned parent ke corner pe
-fixed     — viewport pe fix — scroll pe nahi hilta
-sticky    — scroll pe ek jagah chipak jaata hai
-```
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior
+
+| Position | Behavior | Use case |
+|----------|----------|----------|
+| relative | Apni jagah se shift, space rehti hai | Child ka anchor |
+| absolute | Nearest positioned parent ke corner pe | Tooltip, dropdown |
+| fixed | Viewport pe fix — scroll pe nahi hilta | Navbar, chat button |
+| sticky | Scroll pe ek jagah chipak jaata hai | Table header |
 
 ---
 
 ### Display None vs Visibility Hidden vs Opacity 0
-```
-display: none       — element gone, space bhi nahi
-visibility: hidden  — invisible, space rehti hai
-opacity: 0          — invisible, space hai, clickable bhi hai
-```
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior
+
+| | Space leta hai | Clickable |
+|---|---|---|
+| display:none | No | No |
+| visibility:hidden | Yes | No |
+| opacity:0 | Yes | Yes |
 
 ---
 
 ## Performance
 
 ### Core Web Vitals
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
 
-| Metric | Full Form | Good Score |
-|--------|-----------|------------|
-| LCP | Largest Contentful Paint | < 2.5s |
-| CLS | Cumulative Layout Shift | < 0.1 |
-| FID | First Input Delay | < 100ms |
-| INP | Interaction to Next Paint | < 200ms |
+| Metric | Full Form | Good Score | Fix |
+|--------|-----------|------------|-----|
+| LCP | Largest Contentful Paint | < 2.5s | Image optimize, lazy load |
+| CLS | Cumulative Layout Shift | < 0.1 | Image dimensions define |
+| FID | First Input Delay | < 100ms | JS optimize |
+| INP | Interaction to Next Paint | < 200ms | Event handlers optimize |
 
 **Tools:** Lighthouse, PageSpeed Insights, Chrome DevTools, Google Search Console
 
 ---
 
 ### Performance Fixes
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior
+
 ```js
 // Code Splitting
 const Dashboard = React.lazy(() => import('./Dashboard'));
@@ -346,9 +449,33 @@ const { data } = useQuery({ queryKey: ['users'], staleTime: 5 * 60 * 1000 });
 
 ---
 
-## Other Important Topics
+### AbortController — API Timeout
+**Complexity:** ⭐⭐⭐⭐ | **Company Level:** MNC
+
+```js
+useEffect(() => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 120000); // 2 min
+
+  fetch('/api/data', { signal: controller.signal })
+    .then(res => res.json())
+    .then(data => setData(data))
+    .catch(err => {
+      if (err.name === 'AbortError') setError('Request timed out');
+    })
+    .finally(() => clearTimeout(timer));
+
+  return () => controller.abort(); // cleanup
+}, []);
+```
+
+---
+
+## Web Fundamentals
 
 ### Semantic HTML
+**Complexity:** ⭐⭐ | **Company Level:** Mid-level
+
 ```html
 <!-- Non-semantic -->
 <div class="header">...</div>
@@ -366,30 +493,39 @@ const { data } = useQuery({ queryKey: ['users'], staleTime: 5 * 60 * 1000 });
 ---
 
 ### CORS — Cross Origin Resource Sharing
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior
+
 - Browser ka security feature
 - Alag domain/port/protocol pe request block hoti hai
 - Fix — backend pe `Access-Control-Allow-Origin` header
 - Postman mein CORS nahi hota — sirf browser mein
 
----
-
-### AbortController — API Timeout
 ```js
-const controller = new AbortController();
-const timer = setTimeout(() => controller.abort(), 120000); // 2 min
-
-try {
-  const res = await fetch('/api/data', { signal: controller.signal });
-  clearTimeout(timer); // response aaya — timer cancel
-  return res.json();
-} catch(err) {
-  if (err.name === 'AbortError') throw new Error('Request timed out');
-}
+app.use(cors({ origin: 'http://localhost:3000' }));
 ```
 
 ---
 
-### TypeScript Basics
+## Testing
+
+### React Testing Library Queries
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior
+
+| Query | Behavior | Use case |
+|-------|----------|----------|
+| getBy | Error if not found | Element hona chahiye |
+| queryBy | null if not found | Element nahi hai verify |
+| findBy | Returns promise | Async element |
+
+**Priority:** getByRole > getByLabelText > getByText > getByTestId
+
+---
+
+## TypeScript
+
+### Basics
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
 ```ts
 interface User {
   id: number;
@@ -404,12 +540,16 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onClick }) => (
-  <button onClick={onClick}>{label}</button>
+const Button: React.FC<ButtonProps> = ({ label, onClick, disabled = false }) => (
+  <button onClick={onClick} disabled={disabled}>{label}</button>
 );
 
 // useState with type
 const [user, setUser] = useState<User | null>(null);
+
+// Union types
+type ID = string | number;
+type Status = 'active' | 'inactive' | 'pending';
 ```
 
 ---
@@ -417,6 +557,8 @@ const [user, setUser] = useState<User | null>(null);
 ## Coding Questions
 
 ### Nested Array Flatten — Without inbuilt methods
+**Complexity:** ⭐⭐⭐ | **Company Level:** Senior / MNC
+
 ```js
 function flattenArray(arr) {
   const result = [];
@@ -439,6 +581,8 @@ flattenArray([1, [2, [3, [4]]], 5]); // [1, 2, 3, 4, 5]
 ---
 
 ### String Replace
+**Complexity:** ⭐ | **Company Level:** Entry
+
 ```js
 const str = "Parixit";
 str.replace("Parixit", "Adobe");           // "Adobe"
@@ -449,6 +593,8 @@ str.split("Parixit").join("Adobe");        // split + join method
 ---
 
 ### Tricky Output Questions
+**Complexity:** ⭐⭐⭐⭐ | **Company Level:** MNC
+
 ```js
 // Q1 — Event Loop
 console.log(1);
@@ -463,6 +609,18 @@ for (var i = 0; i < 3; i++) {
 }
 // Output: 3, 3, 3
 
+// Fix — let
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 1000);
+}
+// Output: 0, 1, 2
+
+// Fix — IIFE
+for (var i = 0; i < 3; i++) {
+  ((j) => setTimeout(() => console.log(j), 1000))(i);
+}
+// Output: 0, 1, 2
+
 // Q3 — useState batching
 const handleClick = () => {
   setCount(count + 1); // stale value
@@ -472,3 +630,7 @@ const handleClick = () => {
 setCount(prev => prev + 1);
 setCount(prev => prev + 1); // 2
 ```
+
+---
+
+*Notes by Parixit Soni — Updated regularly*
