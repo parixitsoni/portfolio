@@ -17,8 +17,8 @@ export const metadata = {
   title: "Parixit Soni - Senior Frontend Developer",
   description: "Portfolio of Parixit Soni - Senior Frontend Developer specializing in React.js & Next.js",
   icons: {
-    icon: "/ps-logo.png",
-    apple: "/ps-logo.png",
+    icon: "/ps-logo-light.png",
+    apple: "/ps-logo-light.png",
   },
 };
 
@@ -27,6 +27,24 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`scroll-smooth ${roboto.variable} ${outfit.variable}`} suppressHydrationWarning>
       <head>
         <script src="/theme.js" />
+        {/* Dynamic favicon based on theme */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            function updateFavicon() {
+              var isDark = document.documentElement.classList.contains('dark');
+              var favicon = document.querySelector('link[rel="icon"]');
+              if (!favicon) {
+                favicon = document.createElement('link');
+                favicon.rel = 'icon';
+                document.head.appendChild(favicon);
+              }
+              favicon.href = isDark ? '/ps-logo-dark.png' : '/ps-logo-light.png';
+            }
+            updateFavicon();
+            var observer = new MutationObserver(updateFavicon);
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+          })();
+        `}} />
       </head>
       <body className={`${outfit.className} bg-white dark:bg-[#020617] mesh-gradient min-h-screen relative transition-colors duration-700`}>
         {/* Background Vibrant Glows */}
