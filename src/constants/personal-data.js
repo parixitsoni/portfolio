@@ -1,8 +1,14 @@
 export const personalData = {
   name: "Parixit Soni",
   title: "Senior Frontend Developer",
-  email: "parikshitsoni85@gmail.com",
-  phone: "+91-759-719-1971",
+  // Base64 encoded email to prevent automated spam harvesting
+  get email() {
+    return typeof window !== "undefined" ? atob("cGFyaWtzaGl0c29uaTg1QGdtYWlsLmNvbQ==") : "parikshitsoni85@gmail.com";
+  },
+  // Base64 encoded phone
+  get phone() {
+    return typeof window !== "undefined" ? atob("KzkxLTc1OS03MTktMTk3MQ==") : "+91-759-719-1971";
+  },
   location: "Udaipur, Rajasthan",
   socials: {
     linkedin: "https://linkedin.com/in/parixitsoni",

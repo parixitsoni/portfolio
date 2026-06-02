@@ -147,7 +147,7 @@ export const Projects = () => {
             </div>
 
             {/* Right — highlights */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {project.highlights.map(({ icon: Icon, label, desc }) => (
                 <div key={label} className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 hover:border-sky-300 dark:hover:border-sky-500/40 transition-all group">
                   <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-3 transition-colors bg-sky-500/10 group-hover:bg-sky-500/20 text-sky-600 dark:text-sky-400">

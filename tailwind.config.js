@@ -1,14 +1,18 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: 'class',
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-roboto)', 'sans-serif'],
+        sans: ['var(--font-inter)', 'sans-serif'],
         heading: ['var(--font-outfit)', 'sans-serif'],
+        roboto: ['var(--font-roboto)', 'sans-serif'],
       },
       colors: {
         ice: {

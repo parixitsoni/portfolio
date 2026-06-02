@@ -1,4 +1,5 @@
 import React from "react";
+import { Sun, Moon } from "lucide-react";
 import { NAV_LINKS } from "./constants";
 import { getAssetPath } from "../../utils/paths";
 import { useTheme } from "../../hooks/useTheme";
@@ -15,7 +16,7 @@ const handleNavClick = (e, href) => {
 };
 
 export const DesktopNav = ({ activeSection, scrolled }) => {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const logo = theme === "dark"
     ? getAssetPath("/ps-logo-dark.png")
     : getAssetPath("/ps-logo-light.png");
@@ -47,6 +48,15 @@ export const DesktopNav = ({ activeSection, scrolled }) => {
             <span className="text-xs font-bold tracking-wide">{link.label}</span>
           </a>
         ))}
+
+        <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-2 flex-shrink-0"></div>
+        <button
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+          className="p-2.5 rounded-full text-slate-500 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer"
+        >
+          {theme === "dark" ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-slate-600" />}
+        </button>
       </nav>
     </div>
   );

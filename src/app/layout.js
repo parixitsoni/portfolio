@@ -1,6 +1,7 @@
 import "./globals.css";
-import { Roboto, Outfit } from "next/font/google";
+import { Roboto, Outfit, Inter } from "next/font/google";
 import Script from "next/script";
+import { ThemeProvider } from "../context/ThemeContext";
 
 const roboto = Roboto({ 
   subsets: ["latin"], 
@@ -11,6 +12,11 @@ const roboto = Roboto({
 const outfit = Outfit({ 
   subsets: ["latin"],
   variable: '--font-outfit'
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: '--font-inter'
 });
 
 export const metadata = {
@@ -24,7 +30,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`scroll-smooth ${roboto.variable} ${outfit.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`scroll-smooth ${roboto.variable} ${outfit.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         <script src="/theme.js" />
         {/* Dynamic favicon based on theme */}
@@ -47,15 +53,17 @@ export default function RootLayout({ children }) {
         `}} />
       </head>
       <body className={`${outfit.className} bg-white dark:bg-[#020617] mesh-gradient min-h-screen relative transition-colors duration-700`}>
-        {/* Background Vibrant Glows */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-sky-500/10 dark:bg-sky-400/20 rounded-full blur-[120px] animate-pulse"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] bg-blue-600/10 dark:bg-blue-500/15 rounded-full blur-[120px]"></div>
-        </div>
+        <ThemeProvider>
+          {/* Background Vibrant Glows */}
+          <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+            <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-sky-500/10 dark:bg-sky-400/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] bg-blue-600/10 dark:bg-blue-500/15 rounded-full blur-[120px]"></div>
+          </div>
 
-        <div className="relative z-10 flex flex-col min-h-screen">
-          {children}
-        </div>
+          <div className="relative z-10 flex flex-col min-h-screen">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

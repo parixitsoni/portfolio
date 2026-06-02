@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Mail, Linkedin, Github, ArrowUpRight, Send, CheckCircle2 } from "lucide-react";
+import { Mail, ArrowUpRight, Send, CheckCircle2 } from "lucide-react";
 import { personalData } from "../constants/personal-data";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [sentDirectly, setSentDirectly] = useState(false);
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -30,14 +31,44 @@ export const Contact = () => {
     setErrors({});
     setStatus("sending");
 
-    // Simulate proper email send (would usually use EmailJS or a backend)
-    // Here we simulate success and then provide a mailto fallback for actual sending
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+
+    if (accessKey) {
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            subject: `Portfolio Inquiry from ${formData.name}`,
+          }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setStatus("success");
+          setSentDirectly(true);
+          setFormData({ name: "", email: "", message: "" });
+          return;
+        }
+      } catch (err) {
+        console.error("Web3Forms submission failed, falling back:", err);
+      }
+    }
+
+    // Fallback: opening mail client
     setTimeout(() => {
       setStatus("success");
-      // Fallback to open mail client for "actual" send if needed
+      setSentDirectly(false);
       const mailtoLink = `mailto:${personalData.email}?subject=Collaboration Inquiry from ${formData.name}&body=${formData.message}%0D%0A%0D%0AFrom: ${formData.name} (${formData.email})`;
       window.location.href = mailtoLink;
-    }, 1500);
+    }, 1200);
   };
 
   return (
@@ -82,11 +113,17 @@ export const Contact = () => {
                 {status === "success" ? (
                   <div className="text-center py-10 animate-fadeInUp">
                     <CheckCircle2 size={64} className="text-sky-500 dark:text-sky-400 mx-auto mb-6" />
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Message Prepared!</h3>
-                    <p className="text-slate-600 dark:text-slate-400 mb-8">Opening your email client to complete the send...</p>
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                      {sentDirectly ? "Message Sent!" : "Message Prepared!"}
+                    </h3>
+                    <p className="text-slate-600 dark:text-slate-400 mb-8">
+                      {sentDirectly 
+                        ? "Thank you! Your message was sent directly. I'll be in touch shortly." 
+                        : "Opening your email client to complete the send..."}
+                    </p>
                     <button 
                       onClick={() => setStatus("idle")}
-                      className="px-8 py-3 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all font-bold"
+                      className="px-8 py-3 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all font-bold cursor-pointer"
                     >
                       Send Another
                     </button>
@@ -129,7 +166,7 @@ export const Contact = () => {
                       </div>
                       <button 
                         disabled={status === "sending"}
-                        className="w-full py-5 bg-slate-950 dark:bg-white text-white dark:text-slate-950 border border-slate-900 dark:border-white/10 hover:scale-[1.02] active:scale-[0.98] transition-all rounded-2xl font-bold flex items-center justify-center gap-2 group disabled:opacity-50 shadow-xl"
+                        className="w-full py-5 bg-slate-950 dark:bg-white text-white dark:text-slate-950 border border-slate-900 dark:border-white/10 hover:scale-[1.02] active:scale-[0.98] transition-all rounded-2xl font-bold flex items-center justify-center gap-2 group disabled:opacity-50 shadow-xl cursor-pointer"
                       >
                         {status === "sending" ? (
                           <div className="w-5 h-5 border-2 border-white/30 border-t-white dark:border-slate-900/30 dark:border-t-slate-900 rounded-full animate-spin"></div>
@@ -149,6 +186,5 @@ export const Contact = () => {
         </div>
       </div>
     </section>
-
   );
 };

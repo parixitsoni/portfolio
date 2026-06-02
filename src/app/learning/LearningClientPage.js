@@ -8,7 +8,7 @@ import { Typography } from "../../components/UI/Typography";
 import { SectionHeader } from "../../components/UI/SectionHeader";
 import { LearningSearch } from "../../components/Learning/LearningSearch";
 import { LearningFilters } from "../../components/Learning/LearningFilters";
-import { Card } from "../../components/UI/Card";
+
 
 const CATEGORIES = ["All", "React", "Next.js", "CSS", "Coding", "JavaScript", "System Design"];
 const DIFFICULTIES = ["All", "Easy", "Medium", "Hard", "Expert"];
@@ -56,6 +56,21 @@ export default function LearningClientPage({ initialData }) {
       isLocal: true // Tag as local-only
     };
 
+    // If on a static build or custom production site, don't ping non-existent server route
+    const isStaticProduction = typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1";
+
+    if (isStaticProduction) {
+      // Direct local storage save for production static sites to avoid console errors
+      const updatedLocal = [payload, ...data];
+      setData(updatedLocal);
+      const existingLocal = JSON.parse(localStorage.getItem('learning_vault_entries') || '[]');
+      localStorage.setItem('learning_vault_entries', JSON.stringify([payload, ...existingLocal]));
+      setShowAddModal(false);
+      setNewItem({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" });
+      setIsSaving(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/learning", { 
         method: "POST", 
@@ -79,7 +94,7 @@ export default function LearningClientPage({ initialData }) {
       setShowAddModal(false); 
       setNewItem({ question: "", theory: "", companies: "", category: "React", difficulty: "Medium" }); 
     } catch (e) { 
-      console.error(e); 
+      console.error("Local save fallback:", e); 
       const updatedLocal = [payload, ...data];
       setData(updatedLocal);
       const existingLocal = JSON.parse(localStorage.getItem('learning_vault_entries') || '[]');
