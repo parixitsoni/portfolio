@@ -35,6 +35,15 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             try {
+              var params = new URLSearchParams(window.location.search);
+              var urlTheme = params.get('theme');
+              if (urlTheme === 'dark' || urlTheme === 'light') {
+                localStorage.setItem('theme', urlTheme);
+                localStorage.setItem('theme_override', 'true');
+                var newUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, newUrl);
+              }
+
               var theme = localStorage.getItem('theme');
               var override = localStorage.getItem('theme_override') === 'true';
               if (!theme || !override) {

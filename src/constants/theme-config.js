@@ -51,9 +51,11 @@ export const handleThemeRedirect = async (targetTheme) => {
       }
       window.location.reload();
     } else {
-      window.location.href = targetTheme === "classic" 
-        ? THEME_CONFIG.mainThemeUrl 
-        : THEME_CONFIG.theme1Url;
+      const currentThemeMode = localStorage.getItem("theme") || "dark";
+      const baseUrl = targetTheme === "classic" ? THEME_CONFIG.mainThemeUrl : THEME_CONFIG.theme1Url;
+      setTimeout(() => {
+        window.location.href = `${baseUrl}?theme=${currentThemeMode}`;
+      }, 500);
     }
   }, 100);
 };
