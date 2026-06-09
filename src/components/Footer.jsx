@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { personalData } from "../constants/personal-data";
 import { Linkedin, ArrowUp, Github, Send, Palette } from "lucide-react";
 import { THEME_CONFIG, handleThemeRedirect } from "../constants/theme-config";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [isLocal, setIsLocal] = useState(false);
+
+  useEffect(() => {
+    setIsLocal(
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
+    );
+  }, []);
 
   return (
     <footer className="py-20 px-6 relative overflow-hidden border-t border-slate-100 dark:border-white/5 bg-transparent">
@@ -31,11 +39,6 @@ export const Footer = () => {
             © {currentYear} {personalData.name}
           </p>
 
-          {/* <p className="text-slate-400 dark:text-slate-600 text-[10px] font-bold tracking-widest uppercase">
-            Built with vibe coding from{" "}
-            <span className="text-sky-500 dark:text-sky-400">Antigravity</span>
-          </p> */}
-
           <div className="flex items-center gap-8 text-slate-400">
             <a href={personalData.socials.linkedin} className="hover:text-sky-600 transition-colors" title="LinkedIn">
               <Linkedin size={18} />
@@ -43,16 +46,19 @@ export const Footer = () => {
             <a href={personalData.socials.github} className="hover:text-slate-900 dark:hover:text-white transition-colors" title="GitHub">
               <Github size={18} />
             </a>
-            <button 
-              onClick={(e) => {
-                e.preventDefault();
-                handleThemeRedirect(THEME_CONFIG.currentTheme === "main" ? "workspace" : "classic");
-              }}
-              className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer flex items-center justify-center bg-transparent border-0 p-0"
-              title={THEME_CONFIG.currentTheme === "main" ? "Switch to Interactive Graph UI" : "Switch to Classic Scrolling UI"}
-            >
-              <Palette size={18} />
-            </button>
+            {/* Only visible in local dev — interactive theme branch is a private Vercel deployment */}
+            {isLocal && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleThemeRedirect(THEME_CONFIG.currentTheme === "main" ? "workspace" : "classic");
+                }}
+                className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer flex items-center justify-center bg-transparent border-0 p-0"
+                title={THEME_CONFIG.currentTheme === "main" ? "Switch to Interactive Graph UI" : "Switch to Classic Scrolling UI"}
+              >
+                <Palette size={18} />
+              </button>
+            )}
             <div className="w-px h-4 bg-slate-200 dark:bg-white/10 mx-2"></div>
             <a href="#home" className="flex items-center gap-2 hover:text-sky-600 transition-colors">
               <span className="text-[10px] font-bold uppercase tracking-widest">Back to Top</span>

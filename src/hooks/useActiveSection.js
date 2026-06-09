@@ -13,8 +13,13 @@ export const useActiveSection = (navLinks) => {
     }
 
     const observers = navLinks.map((link) => {
-      if (!link.href.startsWith("/#")) return null;
-      const el = document.querySelector(link.href.substring(1));
+      // Resolve element: home link uses href="/" so look up #home directly
+      let el;
+      if (link.id === "home") {
+        el = document.getElementById("home");
+      } else if (link.href.startsWith("/#")) {
+        el = document.querySelector(link.href.substring(1));
+      }
       if (!el) return null;
 
       const observer = new IntersectionObserver(
@@ -30,8 +35,19 @@ export const useActiveSection = (navLinks) => {
       return observer;
     });
 
+    // Fallback: if scrolled to very top, always mark Home as active
+    const handleScroll = () => {
+      if (window.scrollY < 80) {
+        setActiveSection("home");
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Set initial state
+    handleScroll();
+
     return () => {
       observers.forEach((obs) => obs?.disconnect());
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [pathname, navLinks]);
 
