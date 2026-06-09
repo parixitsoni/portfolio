@@ -32,7 +32,23 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`scroll-smooth ${roboto.variable} ${outfit.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
-        <script src="/theme.js" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var theme = localStorage.getItem('theme');
+              var override = localStorage.getItem('theme_override') === 'true';
+              if (!theme || !override) {
+                var hour = new Date().getHours();
+                theme = (hour >= 19 || hour < 7) ? 'dark' : 'light';
+              }
+              if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+              } else {
+                document.documentElement.classList.remove('dark');
+              }
+            } catch (e) {}
+          })();
+        `}} />
         {/* Dynamic favicon based on theme */}
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
@@ -104,12 +120,20 @@ export default function RootLayout({ children }) {
               theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             }
             if (theme === 'light') {
-              loader.style.backgroundColor = '#f8fafc';
+              loader.style.backgroundColor = '#ffffff';
               if (text) text.style.color = '#0284c7';
               var spinner = loader.querySelector('div');
               if (spinner) {
                 spinner.style.borderTopColor = '#0284c7';
                 spinner.style.borderRightColor = 'rgba(2,132,199,0.15)';
+              }
+            } else {
+              loader.style.backgroundColor = '#020617';
+              if (text) text.style.color = '#38bdf8';
+              var spinner = loader.querySelector('div');
+              if (spinner) {
+                spinner.style.borderTopColor = '#38bdf8';
+                spinner.style.borderRightColor = 'rgba(56,189,248,0.15)';
               }
             }
             
