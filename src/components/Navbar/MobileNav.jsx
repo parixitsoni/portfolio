@@ -34,7 +34,7 @@ export const MobileNav = ({ activeSection, theme, toggleTheme }) => (
       <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-0.5 flex-shrink-0"></div>
 
       <button
-        onClick={toggleTheme}
+        onClick={(e) => toggleTheme(e)}
         aria-label="Toggle theme"
         className="flex flex-col items-center justify-center p-2 rounded-2xl transition-all flex-shrink-0 min-w-[42px] text-slate-500 hover:text-slate-950 dark:hover:text-white cursor-pointer"
       >

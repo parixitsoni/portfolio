@@ -48,10 +48,46 @@ export const ThemeProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = (e) => {
     localStorage.setItem("theme_override", "true");
     setUserOverride(true);
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+
+    const isViewTransition = typeof document !== "undefined" && document.startViewTransition;
+    if (isViewTransition && e && e.clientX !== undefined && e.clientY !== undefined) {
+      const x = e.clientX;
+      const y = e.clientY;
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      const transition = document.startViewTransition(() => {
+        setTheme((prev) => (prev === "light" ? "dark" : "light"));
+      });
+
+      transition.ready.then(() => {
+        const isDark = theme === "light";
+        const clipPath = [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`
+        ];
+        
+        document.documentElement.animate(
+          {
+            clipPath: isDark ? clipPath : [...clipPath].reverse(),
+          },
+          {
+            duration: 500,
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+            pseudoElement: isDark
+              ? "::view-transition-new(root)"
+              : "::view-transition-old(root)",
+          }
+        );
+      });
+    } else {
+      setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    }
   };
 
   return (

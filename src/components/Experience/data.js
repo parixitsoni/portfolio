@@ -12,7 +12,7 @@ export const experiences = [
   {
     company: "Cairs Solutions",
     domain: "cairs.com",
-    title: "Senior Frontend Developer",
+    title: "Senior Consultant",
     location: "Visakhapatnam, AP (Remote)",
     startDate: "2024-03-25",
     endDate: "2025-10-23",

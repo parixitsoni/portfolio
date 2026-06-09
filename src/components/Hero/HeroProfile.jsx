@@ -5,7 +5,7 @@ export const HeroProfile = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="relative group p-4 cursor-pointer" onClick={toggleTheme}>
+    <div className="relative group p-4 cursor-pointer" onClick={(e) => toggleTheme(e)}>
       {/* Floating Decorative Rings */}
       <div className="absolute -inset-4 border border-sky-500/10 rounded-[5rem] animate-[spin_20s_linear_infinite]"></div>
       <div className="absolute -inset-8 border border-blue-500/5 rounded-[6rem] animate-[spin_30s_linear_infinite_reverse]"></div>

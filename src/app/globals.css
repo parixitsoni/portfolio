@@ -122,3 +122,75 @@ p {
 @media (max-width: 768px) {
   .py-24 { padding-top: 4rem; padding-bottom: 4rem; }
 }
+
+/* Custom View Transition styles for Theme Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* 3D Isometric Projection Utilities */
+.isometric-container {
+  perspective: 2000px;
+}
+
+.isometric-grid {
+  transform: rotateX(55deg) rotateZ(-45deg);
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+
+.isometric-block {
+  transform-style: preserve-3d;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.isometric-face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.isometric-face-top {
+  transform: translateZ(var(--block-height, 4px));
+  transition: transform 0.3s ease;
+}
+
+.isometric-face-front {
+  transform: rotateX(-90deg);
+  transform-origin: bottom center;
+  height: var(--block-height, 4px);
+  top: auto;
+  bottom: 0;
+  transition: height 0.3s ease;
+}
+
+.isometric-face-side {
+  transform: rotateY(90deg);
+  transform-origin: center right;
+  width: var(--block-height, 4px);
+  left: auto;
+  right: 0;
+  transition: width 0.3s ease;
+}

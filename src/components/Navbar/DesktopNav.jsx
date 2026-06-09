@@ -51,7 +51,7 @@ export const DesktopNav = ({ activeSection, scrolled }) => {
 
         <div className="w-[1px] h-6 bg-slate-200 dark:bg-white/10 mx-2 flex-shrink-0"></div>
         <button
-          onClick={toggleTheme}
+          onClick={(e) => toggleTheme(e)}
           aria-label="Toggle theme"
           className="p-2.5 rounded-full text-slate-500 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer"
         >
