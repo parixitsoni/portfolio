@@ -6,6 +6,13 @@ import { useTheme } from "../../hooks/useTheme";
 import { handleThemeRedirect } from "../../constants/theme-config";
 
 const handleNavClick = (e, href) => {
+  // Home link (href="/") — scroll to top without page reload
+  if (href === "/") {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+  // Hash links — smooth scroll to section
   if (href.includes("#")) {
     e.preventDefault();
     const id = href.split("#")[1];
