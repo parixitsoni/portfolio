@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { exec } from "child_process";
 
+export const dynamic = "force-static";
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const branch = searchParams.get("branch");
