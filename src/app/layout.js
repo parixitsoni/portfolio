@@ -79,7 +79,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${outfit.className} bg-white dark:bg-[#020617] mesh-gradient min-h-screen relative transition-colors duration-700`}>
         {/* Anti-FOUC Page Loader */}
-        <div id="global-page-loader" style={{
+        <div id="global-page-loader" suppressHydrationWarning style={{
           position: "fixed",
           top: 0,
           left: 0,
@@ -96,7 +96,7 @@ export default function RootLayout({ children }) {
           visibility: "visible",
           pointerEvents: "none"
         }}>
-          <div style={{
+          <div suppressHydrationWarning style={{
             width: "36px",
             height: "36px",
             borderRadius: "50%",
@@ -104,7 +104,7 @@ export default function RootLayout({ children }) {
             borderTopColor: "#38bdf8",
             animation: "loader-spin 1s linear infinite"
           }} />
-          <p id="global-page-loader-text" style={{
+          <p id="global-page-loader-text" suppressHydrationWarning style={{
             color: "#38bdf8",
             fontFamily: "monospace",
             fontSize: "11px",
@@ -112,7 +112,7 @@ export default function RootLayout({ children }) {
             letterSpacing: "2px",
             textTransform: "uppercase",
             fontWeight: "bold"
-          }}>Loading Workspace...</p>
+          }}>Loading...</p>
           <style dangerouslySetInnerHTML={{ __html: `
             @keyframes loader-spin { to { transform: rotate(360deg); } }
           `}} />
