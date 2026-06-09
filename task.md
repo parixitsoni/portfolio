@@ -1,0 +1,2 @@
+- in main branach this active tab is not working, 
+- that palete icon is also not visible
