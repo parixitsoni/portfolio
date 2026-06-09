@@ -32,30 +32,23 @@ export const handleThemeRedirect = async (targetTheme) => {
     }
   }
 
-  // Small delay to allow fade-in transition
-  setTimeout(async () => {
-    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    if (isLocal) {
-      try {
-        const branch = targetTheme === "classic" ? "main" : "theme-interactive-network";
-        const res = await fetch(`http://localhost:3001/api/git-checkout?branch=${branch}`);
-        if (res.ok) {
-          // Wait 1.2s to let Next.js dev server notice file changes and begin reload
-          setTimeout(() => {
-            window.location.reload();
-          }, 1200);
-          return;
-        }
-      } catch (e) {
-        console.error("Failed to checkout branch:", e);
+  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  if (isLocal) {
+    try {
+      const branch = targetTheme === "classic" ? "main" : "theme-interactive-network";
+      const res = await fetch(`http://localhost:3001/api/git-checkout?branch=${branch}`);
+      if (res.ok) {
+        // Reload immediately — Next.js detects file changes and refreshes
+        window.location.reload();
+        return;
       }
-      window.location.reload();
-    } else {
-      const currentThemeMode = localStorage.getItem("theme") || "dark";
-      const baseUrl = targetTheme === "classic" ? THEME_CONFIG.mainThemeUrl : THEME_CONFIG.theme1Url;
-      setTimeout(() => {
-        window.location.href = `${baseUrl}?theme=${currentThemeMode}`;
-      }, 500);
+    } catch (e) {
+      console.error("Failed to checkout branch:", e);
     }
-  }, 100);
+    window.location.reload();
+  } else {
+    const currentThemeMode = localStorage.getItem("theme") || "dark";
+    const baseUrl = targetTheme === "classic" ? THEME_CONFIG.mainThemeUrl : THEME_CONFIG.theme1Url;
+    window.location.href = `${baseUrl}?theme=${currentThemeMode}`;
+  }
 };

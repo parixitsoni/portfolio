@@ -121,7 +121,6 @@ export default function RootLayout({ children }) {
           (function() {
             var loader = document.getElementById('global-page-loader');
             var text = document.getElementById('global-page-loader-text');
-            var isClassic = window.location.pathname === '/' && !document.querySelector('main')?.classList?.contains('bg-slate-950');
             
             // Sync loader background color with saved theme
             var theme = localStorage.getItem('theme');
@@ -146,10 +145,11 @@ export default function RootLayout({ children }) {
               }
             }
             
-            if (text) {
+            // Set loader text: only override if not already set by handleThemeRedirect
+            if (text && !text.dataset.overridden) {
               text.textContent = window.location.pathname.includes('learning') 
                 ? 'Loading Vault...' 
-                : (isClassic ? 'Loading Classic Theme...' : 'Loading Workspace...');
+                : 'Loading...';
             }
 
             window.addEventListener('load', function() {
