@@ -25,7 +25,7 @@ export const handleThemeRedirect = async (targetTheme) => {
   if (isLocal) {
     try {
       const branch = targetTheme === "classic" ? "main" : "theme-interactive-network";
-      const res = await fetch(`/api/git-checkout?branch=${branch}`);
+      const res = await fetch(`http://localhost:3001/api/git-checkout?branch=${branch}`);
       if (res.ok) {
         setTimeout(() => {
           window.location.reload();
