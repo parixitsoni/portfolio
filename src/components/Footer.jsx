@@ -1,7 +1,7 @@
 import React from "react";
 import { personalData } from "../constants/personal-data";
 import { Linkedin, ArrowUp, Github, Send, Palette } from "lucide-react";
-import { THEME_CONFIG } from "../constants/theme-config";
+import { THEME_CONFIG, handleThemeRedirect } from "../constants/theme-config";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -43,13 +43,16 @@ export const Footer = () => {
             <a href={personalData.socials.github} className="hover:text-slate-900 dark:hover:text-white transition-colors" title="GitHub">
               <Github size={18} />
             </a>
-            <a 
-              href={THEME_CONFIG.currentTheme === "main" ? THEME_CONFIG.theme1Url : THEME_CONFIG.mainThemeUrl}
-              className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer flex items-center justify-center"
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                handleThemeRedirect(THEME_CONFIG.currentTheme === "main" ? "workspace" : "classic");
+              }}
+              className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors cursor-pointer flex items-center justify-center bg-transparent border-0 p-0"
               title={THEME_CONFIG.currentTheme === "main" ? "Switch to Interactive Graph UI" : "Switch to Classic Scrolling UI"}
             >
               <Palette size={18} />
-            </a>
+            </button>
             <div className="w-px h-4 bg-slate-200 dark:bg-white/10 mx-2"></div>
             <a href="#home" className="flex items-center gap-2 hover:text-sky-600 transition-colors">
               <span className="text-[10px] font-bold uppercase tracking-widest">Back to Top</span>

@@ -43,15 +43,6 @@ export const MobileNav = ({ activeSection, theme, toggleTheme }) => (
         <span className="text-[7px] font-black uppercase tracking-[0.12em] mt-1">Theme</span>
       </button>
 
-      <button
-        onClick={() => handleThemeRedirect("workspace")}
-        aria-label="Toggle workspace theme"
-        className="flex flex-col items-center justify-center p-2 rounded-2xl transition-all flex-shrink-0 min-w-[42px] text-sky-500 hover:text-sky-600 cursor-pointer"
-      >
-        <Monitor size={16} />
-        <span className="text-[7px] font-black uppercase tracking-[0.12em] mt-1">Workspace</span>
-      </button>
-
       <a 
         href={getAssetPath("/Parixit_Soni_Resume.pdf")} 
         download="Parixit_Soni_Resume.pdf"

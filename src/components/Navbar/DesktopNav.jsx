@@ -58,14 +58,6 @@ export const DesktopNav = ({ activeSection, scrolled }) => {
         >
           {theme === "dark" ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-slate-600" />}
         </button>
-        <button
-          onClick={() => handleThemeRedirect("workspace")}
-          aria-label="Toggle workspace theme"
-          title="Switch to Workspace Theme"
-          className="p-2.5 rounded-full text-sky-500 hover:text-sky-600 hover:bg-slate-100 dark:hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer"
-        >
-          <Monitor size={18} />
-        </button>
       </nav>
     </div>
   );

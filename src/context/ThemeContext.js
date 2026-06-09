@@ -24,6 +24,15 @@ export const ThemeProvider = ({ children }) => {
       const timeBased = getTimeBasedTheme();
       setTheme(timeBased);
     }
+
+    // Fade out and hide the global page loader after mount
+    const loader = document.getElementById("global-page-loader");
+    if (loader) {
+      setTimeout(() => {
+        loader.style.opacity = "0";
+        loader.style.visibility = "hidden";
+      }, 100);
+    }
   }, []);
 
   // Sync to HTML document class & localStorage

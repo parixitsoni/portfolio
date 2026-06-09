@@ -53,6 +53,81 @@ export default function RootLayout({ children }) {
         `}} />
       </head>
       <body className={`${outfit.className} bg-white dark:bg-[#020617] mesh-gradient min-h-screen relative transition-colors duration-700`}>
+        {/* Anti-FOUC Page Loader */}
+        <div id="global-page-loader" style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#02050b",
+          zIndex: 99999,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "opacity 0.4s ease, visibility 0.4s ease",
+          opacity: 1,
+          visibility: "visible",
+          pointerEvents: "none"
+        }}>
+          <div style={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "50%",
+            border: "3px solid rgba(56,189,248,0.15)",
+            borderTopColor: "#38bdf8",
+            animation: "loader-spin 1s linear infinite"
+          }} />
+          <p id="global-page-loader-text" style={{
+            color: "#38bdf8",
+            fontFamily: "monospace",
+            fontSize: "11px",
+            marginTop: "16px",
+            letterSpacing: "2px",
+            textTransform: "uppercase",
+            fontWeight: "bold"
+          }}>Loading Workspace...</p>
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes loader-spin { to { transform: rotate(360deg); } }
+          `}} />
+        </div>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            var loader = document.getElementById('global-page-loader');
+            var text = document.getElementById('global-page-loader-text');
+            var isClassic = window.location.pathname === '/' && !document.querySelector('main')?.classList?.contains('bg-slate-950');
+            
+            // Sync loader background color with saved theme
+            var theme = localStorage.getItem('theme');
+            if (!theme) {
+              theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            if (theme === 'light') {
+              loader.style.backgroundColor = '#f8fafc';
+              if (text) text.style.color = '#0284c7';
+              var spinner = loader.querySelector('div');
+              if (spinner) {
+                spinner.style.borderTopColor = '#0284c7';
+                spinner.style.borderRightColor = 'rgba(2,132,199,0.15)';
+              }
+            }
+            
+            if (text) {
+              text.textContent = window.location.pathname.includes('learning') 
+                ? 'Loading Vault...' 
+                : (isClassic ? 'Loading Classic Theme...' : 'Loading Workspace...');
+            }
+
+            window.addEventListener('load', function() {
+              setTimeout(function() {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+              }, 100);
+            });
+          })();
+        `}} />
+
         <ThemeProvider>
           {/* Background Vibrant Glows */}
           <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
