@@ -1,8 +1,9 @@
 import React from "react";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Monitor } from "lucide-react";
 import { NAV_LINKS } from "./constants";
 import { getAssetPath } from "../../utils/paths";
 import { useTheme } from "../../hooks/useTheme";
+import { handleThemeRedirect } from "../../constants/theme-config";
 
 const handleNavClick = (e, href) => {
   if (href.includes("#")) {
@@ -56,6 +57,14 @@ export const DesktopNav = ({ activeSection, scrolled }) => {
           className="p-2.5 rounded-full text-slate-500 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer"
         >
           {theme === "dark" ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-slate-600" />}
+        </button>
+        <button
+          onClick={() => handleThemeRedirect("workspace")}
+          aria-label="Toggle workspace theme"
+          title="Switch to Workspace Theme"
+          className="p-2.5 rounded-full text-sky-500 hover:text-sky-600 hover:bg-slate-100 dark:hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer"
+        >
+          <Monitor size={18} />
         </button>
       </nav>
     </div>

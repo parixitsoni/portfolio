@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import { Moon, Sun, Download } from "lucide-react";
+import { Moon, Sun, Download, Monitor } from "lucide-react";
 import { NAV_LINKS } from "./constants";
 import { getAssetPath } from "../../utils/paths";
+import { handleThemeRedirect } from "../../constants/theme-config";
 
 const getShortLabel = (id) => {
   switch (id) {
@@ -40,6 +41,15 @@ export const MobileNav = ({ activeSection, theme, toggleTheme }) => (
       >
         {theme === "dark" ? <Sun size={16} className="text-amber-400 animate-pulse" /> : <Moon size={16} className="text-slate-600" />}
         <span className="text-[7px] font-black uppercase tracking-[0.12em] mt-1">Theme</span>
+      </button>
+
+      <button
+        onClick={() => handleThemeRedirect("workspace")}
+        aria-label="Toggle workspace theme"
+        className="flex flex-col items-center justify-center p-2 rounded-2xl transition-all flex-shrink-0 min-w-[42px] text-sky-500 hover:text-sky-600 cursor-pointer"
+      >
+        <Monitor size={16} />
+        <span className="text-[7px] font-black uppercase tracking-[0.12em] mt-1">Workspace</span>
       </button>
 
       <a 
