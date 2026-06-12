@@ -9,6 +9,7 @@ import { Education } from "../components/Education";
 import { Projects } from "../components/Projects";
 import { Footer } from "../components/Footer";
 import { DeveloperWorkspace } from "../components/DeveloperWorkspace";
+import { THEME_CONFIG } from "../constants/theme-config";
 
 export default function Home() {
   const [view, setView] = useState(null);
@@ -27,8 +28,8 @@ export default function Home() {
       return;
     }
 
-    // Check localStorage
-    const savedView = localStorage.getItem("portfolio-view");
+    // Check localStorage, fallback to global default view from config
+    const savedView = localStorage.getItem("portfolio-view") || THEME_CONFIG.defaultView;
     if (savedView === "workspace") {
       setView("workspace");
     } else {

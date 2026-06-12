@@ -58,6 +58,7 @@ export const DeveloperWorkspace = () => {
     setConsoleInput,
     consoleLogs,
     promptNameMode,
+    customPrompt,     // custom dynamic prompt text
     handleTerminalSubmit,
     handleKeyDown,
     terminalEndRef,
@@ -318,6 +319,7 @@ export const DeveloperWorkspace = () => {
         handleKeyDown={handleKeyDown}
         terminalEndRef={terminalEndRef}
         promptNameMode={promptNameMode}
+        customPrompt={customPrompt}
         currentPath={currentPath}
         suggestionText={suggestionText}
         terminalHeight={terminalHeight}

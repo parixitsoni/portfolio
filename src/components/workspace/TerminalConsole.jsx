@@ -15,6 +15,7 @@ export const TerminalConsole = ({
   handleTerminalSubmit,
   terminalEndRef,
   promptNameMode,
+  customPrompt,     // custom dynamic prompt text
   handleKeyDown,    // from useTerminal hook
   currentPath,      // from useTerminal hook
   suggestionText,   // from useTerminal hook
@@ -192,7 +193,7 @@ export const TerminalConsole = ({
                   </span>
                 )}
                 {log.type === "output" && (
-                  <span className="text-slate-800 dark:text-slate-200">{log.text}</span>
+                  <span className={log.className || "text-slate-800 dark:text-slate-200"}>{log.text}</span>
                 )}
                 {log.type === "error" && (
                   <span className="text-red-500 dark:text-rose-400">⚠ {log.text}</span>
@@ -216,8 +217,8 @@ export const TerminalConsole = ({
               className="font-mono select-none flex items-center h-full shrink-0 mr-2 whitespace-nowrap leading-none"
               style={{ fontFamily: "'Fira Code', 'Cascadia Code', 'Courier New', monospace", fontSize: "11px", fontWeight: 400 }}
             >
-              {promptNameMode ? (
-                <span className="text-sky-600 dark:text-sky-500 leading-none">name$&nbsp;</span>
+              {customPrompt ? (
+                <span className="text-sky-600 dark:text-sky-500 leading-none">{customPrompt}$&nbsp;</span>
               ) : (
                 <span className="flex items-center leading-none">
                   <span className="text-emerald-500 dark:text-emerald-400">parixit</span>
@@ -246,7 +247,7 @@ export const TerminalConsole = ({
                 value={consoleInput}
                 onChange={(e) => setConsoleInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={promptNameMode ? "Enter your name here..." : "Type a command or path..."}
+                placeholder={customPrompt ? "Enter input here..." : "Type a command or path..."}
                 className={`w-full h-full bg-transparent border-none outline-none font-mono text-[11px] p-0 m-0 relative z-10 focus:ring-0 focus:outline-none ${
                   isDark ? "text-white placeholder-slate-700" : "text-slate-800 placeholder-slate-400"
                 }`}

@@ -1,3 +1,7 @@
+import { VERSION_INFO } from "./version-config";
+
+const updateListMarkdown = VERSION_INFO.changelog.map(item => `- ${item}`).join("\n");
+
 export const FILE_SYSTEM = {
   profile: {
     name: "profile",
@@ -16,6 +20,22 @@ With over 4.2 years of professional experience, I specialize in crafting high-pe
 - **Accessibility**: Engineering WCAG 2.1 AA compliant elements.
 - **Scale**: Designing modular, clean codebases using design systems.`,
         previewType: "profile"
+      },
+      "system_updates.md": {
+        name: "system_updates.md",
+        type: "markdown",
+        content: `# Portfolio System Updates & Release Notes
+
+Current Version: v${VERSION_INFO.version}
+Last Updated   : ${VERSION_INFO.lastUpdated}
+
+## Latest Features
+${updateListMarkdown}
+
+---
+*Recruiter Note: Parixit built this modular update system using unified client-side state hooks to bridge classic and developer workspace layouts.*`,
+        previewType: "updates",
+        data: VERSION_INFO
       }
     }
   },

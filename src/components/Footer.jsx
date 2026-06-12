@@ -2,6 +2,7 @@ import React from "react";
 import { personalData } from "../constants/personal-data";
 import { Linkedin, ArrowUp, Github, Send, Palette } from "lucide-react";
 import { THEME_CONFIG, handleThemeRedirect } from "../constants/theme-config";
+import { VERSION_INFO } from "../constants/version-config";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -27,8 +28,10 @@ export const Footer = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-slate-100 dark:border-white/5">
-          <p className="text-slate-600 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase">
-            © {currentYear} {personalData.name}
+          <p className="text-slate-600 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase flex flex-wrap gap-x-3 gap-y-1 items-center justify-center md:justify-start">
+            <span>© {currentYear} {personalData.name}</span>
+            <span className="hidden sm:inline text-slate-300 dark:text-slate-800">|</span>
+            <span className="text-sky-600/80 dark:text-sky-500/80 font-mono font-bold lowercase tracking-normal">v{VERSION_INFO.version} (updated: {VERSION_INFO.lastUpdated})</span>
           </p>
 
           <div className="flex items-center gap-8 text-slate-400">

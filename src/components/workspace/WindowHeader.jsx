@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Monitor, Clock, Sun, Moon, Menu } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
+import { VERSION_INFO } from "../../constants/version-config";
 
 export const WindowHeader = ({ time, sidebarOpen, setSidebarOpen }) => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -26,6 +27,9 @@ export const WindowHeader = ({ time, sidebarOpen, setSidebarOpen }) => {
         <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-1.5 font-heading">
           <Monitor size={12} className="text-sky-500 animate-pulse" />
           <span>Parixit OS <span className="hidden sm:inline">Workspace</span></span>
+        </span>
+        <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800/70 text-slate-500 dark:text-slate-400 font-mono text-[9px] font-bold tracking-normal select-none">
+          v{VERSION_INFO.version}
         </span>
       </div>
 

@@ -365,6 +365,43 @@ export const VisualPreview = ({ activeFile }) => {
           </a>
         </div>
       )}
+
+      {activeFile.previewType === "updates" && (
+        <div className="bg-white dark:bg-[#0c111d]/85 backdrop-blur-xl p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xl dark:shadow-2xl space-y-4 transition-colors duration-300">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/60 pb-4">
+            <div>
+              <span className="px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/25 text-sky-600 dark:text-sky-400 text-[10px] font-black uppercase tracking-wider font-heading">
+                System Updates
+              </span>
+              <h2 className="text-xl font-bold text-slate-850 dark:text-white font-heading mt-2">Portfolio Changelog</h2>
+            </div>
+            <div className="text-right">
+              <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 bg-sky-500/5 px-2.5 py-1 rounded-lg border border-sky-500/15">
+                v{activeFile.data.version}
+              </div>
+              <div className="text-[9px] text-slate-400 dark:text-slate-500 font-mono mt-1">
+                {activeFile.data.lastUpdated}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-1">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-450 dark:text-slate-500 font-heading">Latest Features</h3>
+            <ul className="space-y-2 text-xs text-slate-650 dark:text-slate-350 font-semibold leading-relaxed list-none pl-0">
+              {activeFile.data.changelog.map((item, idx) => (
+                <li key={idx} className="flex gap-2.5 items-start">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-550 dark:bg-sky-400 mt-1.5 shrink-0 animate-pulse"></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800/60 text-[9px] text-slate-400 dark:text-slate-500 font-sans italic font-bold">
+            *Recruiter Note: Parixit built this modular update system using unified client-side state hooks to bridge classic and developer workspace layouts.
+          </div>
+        </div>
+      )}
     </div>
   );
 };
