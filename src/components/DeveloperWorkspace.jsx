@@ -50,7 +50,7 @@ export const DeveloperWorkspace = () => {
   // Digital clock
   const [time, setTime] = useState("");
 
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme, setThemeMode } = useContext(ThemeContext);
 
   // Custom hook for terminal commands, filesystem nav, history & shortcuts
   const {
@@ -64,7 +64,7 @@ export const DeveloperWorkspace = () => {
     currentPath,
     suggestionText,
     isExiting,
-  } = useTerminal(toggleTheme, setTerminalMinimized);
+  } = useTerminal(toggleTheme, setTerminalMinimized, setThemeMode);
 
   // Update clock
   useEffect(() => {

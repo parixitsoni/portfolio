@@ -171,11 +171,11 @@ const runFind = (args, currentPath) => {
 const ALL_COMMANDS = [
   "cat", "cd", "clear", "cls", "contact", "dir", "download",
   "echo", "exit", "find", "help", "history", "ls",
-  "projects", "pwd", "resume", "skills", "theme", "time", "whoami",
+  "mode", "projects", "pwd", "resume", "skills", "theme", "time", "whoami",
 ];
 
 // ─── Hook ──────────────────────────────────────────────────────────────────────
-export const useTerminal = (toggleTheme, setTerminalMinimized) => {
+export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => {
   const [consoleInput, setConsoleInput]     = useState("");
   const [consoleLogs, setConsoleLogs]       = useState([]);
   const [userName, setUserName]             = useState("");
@@ -288,16 +288,13 @@ export const useTerminal = (toggleTheme, setTerminalMinimized) => {
       return;
     }
 
-    // Ctrl+D → exit to classic theme
+    // Ctrl+D → close terminal
     if (e.ctrlKey && (e.key === "d" || e.key === "D")) {
       e.preventDefault();
       setConsoleLogs(prev => [...prev, { text: "logout", type: "system" }]);
       if (setTerminalMinimized) {
         setTerminalMinimized(true);
       }
-      setTimeout(() => {
-        handleThemeRedirect("classic");
-      }, 150);
       return;
     }
 
@@ -446,11 +443,12 @@ export const useTerminal = (toggleTheme, setTerminalMinimized) => {
           newLogs.push({ text: "│  contact               Display contact details      │", type: "output" });
           newLogs.push({ text: "│  resume / download     Download resume PDF          │", type: "output" });
           newLogs.push({ text: "├─ SYSTEM ────────────────────────────────────────────┤", type: "output" });
-          newLogs.push({ text: "│  theme                 Toggle light/dark mode       │", type: "output" });
+          newLogs.push({ text: "│  theme [classic|inter] Switch active theme layout   │", type: "output" });
+          newLogs.push({ text: "│  mode [dark|light]     Set theme dark/light mode    │", type: "output" });
           newLogs.push({ text: "│  time                  Show system time             │", type: "output" });
           newLogs.push({ text: "│  history               Show command history         │", type: "output" });
           newLogs.push({ text: "│  clear / cls           Clear terminal screen        │", type: "output" });
-          newLogs.push({ text: "│  exit                  Exit to Classic Theme        │", type: "output" });
+          newLogs.push({ text: "│  exit                  Close terminal console       │", type: "output" });
           newLogs.push({ text: "├─ KEYBOARD SHORTCUTS ────────────────────────────────┤", type: "output" });
           newLogs.push({ text: "│  ↑ / ↓          Browse command history              │", type: "output" });
           newLogs.push({ text: "│  Tab            Autocomplete command / path         │", type: "output" });
@@ -548,20 +546,64 @@ export const useTerminal = (toggleTheme, setTerminalMinimized) => {
           }
           setConsoleLogs([...newLogs, { text: "logout", type: "system" }]);
           setConsoleInput("");
-          setTimeout(() => {
-            handleThemeRedirect("classic");
-          }, 150);
           return;
 
         // ── theme ─────────────────────────────────────────────────────────────
-        case "theme":
-          if (toggleTheme) {
-            toggleTheme();
-            newLogs.push({ text: "System theme toggled successfully.", type: "system" });
+        case "theme": {
+          const target = args[0]?.toLowerCase();
+          if (target === "classic") {
+            newLogs.push({ text: "Switching to Classic Theme...", type: "system" });
+            setConsoleLogs([...newLogs]);
+            setTimeout(() => {
+              handleThemeRedirect("classic");
+            }, 300);
+          } else if (target === "interactive" || target === "workspace") {
+            newLogs.push({ text: "Switching to Workspace Theme...", type: "system" });
+            setConsoleLogs([...newLogs]);
+            setTimeout(() => {
+              handleThemeRedirect("workspace");
+            }, 300);
+          } else if (!target) {
+            newLogs.push({ text: "Switching to Classic Theme...", type: "system" });
+            setConsoleLogs([...newLogs]);
+            setTimeout(() => {
+              handleThemeRedirect("classic");
+            }, 300);
           } else {
-            newLogs.push({ text: "Theme toggle unavailable.", type: "error" });
+            newLogs.push({ text: "Usage: theme [classic|interactive]", type: "error" });
           }
           break;
+        }
+
+        // ── mode ──────────────────────────────────────────────────────────────
+        case "mode": {
+          const target = args[0]?.toLowerCase();
+          if (target === "dark") {
+            if (setThemeMode) {
+              setThemeMode("dark");
+              newLogs.push({ text: "System theme mode set to dark.", type: "system" });
+            } else {
+              newLogs.push({ text: "Theme mode selection unavailable.", type: "error" });
+            }
+          } else if (target === "light") {
+            if (setThemeMode) {
+              setThemeMode("light");
+              newLogs.push({ text: "System theme mode set to light.", type: "system" });
+            } else {
+              newLogs.push({ text: "Theme mode selection unavailable.", type: "error" });
+            }
+          } else if (!target) {
+            if (toggleTheme) {
+              toggleTheme();
+              newLogs.push({ text: "System theme mode toggled.", type: "system" });
+            } else {
+              newLogs.push({ text: "Theme mode toggle unavailable.", type: "error" });
+            }
+          } else {
+            newLogs.push({ text: "Usage: mode [dark|light]", type: "error" });
+          }
+          break;
+        }
 
         // ── time ──────────────────────────────────────────────────────────────
         case "time":

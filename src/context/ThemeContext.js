@@ -99,8 +99,16 @@ export const ThemeProvider = ({ children }) => {
     }
   };
 
+  const setThemeMode = (mode) => {
+    localStorage.setItem("theme_override", "true");
+    setUserOverride(true);
+    if (mode === "dark" || mode === "light") {
+      setTheme(mode);
+    }
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setThemeMode }}>
       {children}
     </ThemeContext.Provider>
   );
