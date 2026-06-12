@@ -180,7 +180,7 @@ export const DeveloperWorkspace = () => {
   };
 
   return (
-    <div className="fixed inset-0 w-screen h-screen bg-slate-50 dark:bg-[#02050b] text-slate-700 dark:text-slate-200 z-50 flex flex-col font-sans select-none overflow-hidden font-medium transition-colors duration-300">
+    <div className="fixed inset-0 w-screen h-dvh bg-slate-50 dark:bg-[#02050b] text-slate-700 dark:text-slate-200 z-50 flex flex-col font-sans select-none overflow-hidden font-medium transition-colors duration-300">
       
       {/* Exit overlay — prevents flash during redirect */}
       {isExiting && (

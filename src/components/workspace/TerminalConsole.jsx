@@ -26,46 +26,64 @@ export const TerminalConsole = ({
   const isDark = theme === "dark";
   const displayPath = formatDisplayPath(currentPath || "/home/parixit");
 
-  // ── Drag-to-resize handler ──────────────────────────────────────────────────
+  // ── Drag/Touch-to-resize handler ─────────────────────────────────────────────
   const handleResizeStart = useCallback((e) => {
-    e.preventDefault();
-    const startY = e.clientY;
+    const isTouch = e.type === "touchstart";
+    
+    // Prevent default scrolling when dragging to resize
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+    
+    const startY = isTouch ? e.touches[0].clientY : e.clientY;
     const startHeight = terminalHeight;
 
     const onMove = (ev) => {
-      const delta = startY - ev.clientY; // drag up = larger terminal
+      const currentY = ev.type === "touchmove" ? ev.touches[0].clientY : ev.clientY;
+      const delta = startY - currentY; // drag up = larger terminal
       const maxH = window.innerHeight * 0.75;
       const newH = Math.max(80, Math.min(maxH, startHeight + delta));
       setTerminalHeight(newH);
     };
 
     const onUp = () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", onUp);
+      if (isTouch) {
+        document.removeEventListener("touchmove", onMove);
+        document.removeEventListener("touchend", onUp);
+      } else {
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onUp);
+      }
     };
 
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
+    if (isTouch) {
+      document.addEventListener("touchmove", onMove, { passive: false });
+      document.addEventListener("touchend", onUp);
+    } else {
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    }
   }, [terminalHeight, setTerminalHeight]);
 
   return (
     <footer
       className={`bg-slate-100 dark:bg-[#050911]/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex flex-col shrink-0 overflow-hidden relative z-10 transition-colors duration-300 ${
-        terminalMinimized ? "h-9" : "h-56 md:h-auto"
+        terminalMinimized ? "h-9" : "h-auto"
       }`}
       style={!terminalMinimized ? { height: `${terminalHeight}px` } : undefined}
     >
 
-      {/* ── Drag resize handle (desktop, top of panel) ── */}
+      {/* ── Drag/Touch resize handle (top of panel) ── */}
       {!terminalMinimized && (
         <div
           onMouseDown={handleResizeStart}
-          className="hidden md:flex h-2 cursor-ns-resize items-center justify-center shrink-0 hover:bg-sky-500/25 group transition-colors"
+          onTouchStart={handleResizeStart}
+          className="flex h-3 md:h-2 cursor-ns-resize items-center justify-center shrink-0 bg-slate-200/50 dark:bg-slate-900/50 hover:bg-sky-500/25 dark:hover:bg-sky-500/20 group transition-colors border-b border-slate-200/40 dark:border-slate-800/40 touch-none"
           title="Drag to resize terminal"
         >
           <GripHorizontal
             size={12}
-            className="text-slate-300 dark:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="text-slate-400 dark:text-slate-600 opacity-60 md:opacity-0 group-hover:opacity-100 transition-opacity"
           />
         </div>
       )}

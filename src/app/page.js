@@ -43,7 +43,7 @@ export default function Home() {
 
   if (view === "workspace") {
     return (
-      <main className="w-screen h-screen overflow-hidden bg-slate-950">
+      <main className="w-screen h-dvh overflow-hidden bg-slate-950">
         <DeveloperWorkspace />
       </main>
     );
