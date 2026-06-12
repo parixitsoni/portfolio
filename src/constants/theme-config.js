@@ -6,16 +6,7 @@ export const THEME_CONFIG = {
 
 export const getThemeRedirectUrl = (targetTheme) => {
   if (typeof window === "undefined") return "";
-  
-  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  
-  if (isLocal) {
-    return window.location.origin;
-  }
-  
-  return targetTheme === "classic" 
-    ? THEME_CONFIG.mainThemeUrl 
-    : THEME_CONFIG.theme1Url;
+  return window.location.origin;
 };
 
 export const handleThemeRedirect = async (targetTheme) => {
@@ -29,26 +20,19 @@ export const handleThemeRedirect = async (targetTheme) => {
     loader.style.visibility = "visible";
     if (text) {
       text.textContent = targetTheme === "classic" ? "Switching to Classic Theme..." : "Switching to Workspace...";
+      text.dataset.overridden = "true";
     }
   }
 
-  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  if (isLocal) {
-    try {
-      const branch = targetTheme === "classic" ? "main" : "theme-interactive-network";
-      const res = await fetch(`http://localhost:3001/api/git-checkout?branch=${branch}`);
-      if (res.ok) {
-        // Reload immediately — Next.js detects file changes and refreshes
-        window.location.reload();
-        return;
-      }
-    } catch (e) {
-      console.error("Failed to checkout branch:", e);
-    }
-    window.location.reload();
-  } else {
-    const currentThemeMode = localStorage.getItem("theme") || "dark";
-    const baseUrl = targetTheme === "classic" ? THEME_CONFIG.mainThemeUrl : THEME_CONFIG.theme1Url;
-    window.location.href = `${baseUrl}?theme=${currentThemeMode}`;
-  }
+  // Set the view key in localStorage so the page renders the correct component
+  const viewValue = targetTheme === "classic" ? "classic" : "workspace";
+  localStorage.setItem("portfolio-view", viewValue);
+
+  // Trigger reload so the app re-renders with the chosen theme view on the same URL
+  setTimeout(() => {
+    // If there is any view parameter in URL, strip it so the localStorage value takes precedence
+    const url = new URL(window.location.href);
+    url.searchParams.delete("view");
+    window.location.href = url.pathname + url.search;
+  }, 300);
 };

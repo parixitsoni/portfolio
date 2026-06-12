@@ -145,11 +145,19 @@ export default function RootLayout({ children }) {
               }
             }
             
-            // Set loader text: only override if not already set by handleThemeRedirect
+            // Set loader text (only if not already overridden by handleThemeRedirect)
             if (text && !text.dataset.overridden) {
-              text.textContent = window.location.pathname.includes('learning') 
-                ? 'Loading Vault...' 
-                : 'Loading...';
+              if (window.location.pathname.includes('learning')) {
+                text.textContent = 'Loading Vault...';
+              } else {
+                var viewParams = new URLSearchParams(window.location.search);
+                var activeView = viewParams.get('view') || localStorage.getItem('portfolio-view');
+                if (activeView === 'workspace') {
+                  text.textContent = 'Loading Workspace...';
+                } else {
+                  text.textContent = 'Loading Classic Theme...';
+                }
+              }
             }
 
             window.addEventListener('load', function() {
