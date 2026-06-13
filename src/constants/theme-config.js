@@ -29,9 +29,10 @@ export const handleThemeRedirect = async (targetTheme) => {
     }
   }
 
-  // Set the view key in localStorage so the page renders the correct component
+  // Set the view key in localStorage and sessionStorage so the page renders the correct component
   const viewValue = targetTheme === "classic" ? "classic" : "workspace";
   localStorage.setItem("portfolio-view", viewValue);
+  sessionStorage.setItem("portfolio-view-session", viewValue);
 
   // Trigger reload so the app re-renders with the chosen theme view on the same URL
   setTimeout(() => {
