@@ -14,25 +14,44 @@ export const ThemeProvider = ({ children }) => {
 
   // Initialize theme on mount
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    const overrideFlag = localStorage.getItem("theme_override") === "true";
-    
-    if (saved && overrideFlag) {
-      setTheme(saved);
-      setUserOverride(true);
-    } else {
-      const timeBased = getTimeBasedTheme();
-      setTheme(timeBased);
-    }
+    const initTheme = async () => {
+      // 1. Check session theme override (active choice within the current tab session)
+      const sessionTheme = sessionStorage.getItem("theme-session");
+      if (sessionTheme === "dark" || sessionTheme === "light") {
+        setTheme(sessionTheme);
+        setUserOverride(true);
+        return;
+      }
 
-    // Fade out and hide the global page loader after mount
-    const loader = document.getElementById("global-page-loader");
-    if (loader) {
-      setTimeout(() => {
-        loader.style.opacity = "0";
-        loader.style.visibility = "hidden";
-      }, 100);
-    }
+      // 2. Fetch global default theme mode from database
+      try {
+        const res = await fetch("https://keyvalue.immanuel.co/api/KeyVal/GetValue/hft1qyrf/portfolio_config");
+        const data = await res.json();
+        if (data && typeof data === "string") {
+          const parts = data.replace(/"/g, "").split("_");
+          const defaultMode = parts[1];
+          if (defaultMode === "dark" || defaultMode === "light") {
+            setTheme(defaultMode);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch global default theme mode from database:", err);
+      }
+
+      // 3. Fallback to localStorage or time-based theme
+      const saved = localStorage.getItem("theme");
+      const overrideFlag = localStorage.getItem("theme_override") === "true";
+      if (saved && overrideFlag) {
+        setTheme(saved);
+        setUserOverride(true);
+      } else {
+        const timeBased = getTimeBasedTheme();
+        setTheme(timeBased);
+      }
+    };
+
+    initTheme();
   }, []);
 
   // Sync to HTML document class & localStorage
@@ -137,6 +156,7 @@ export const ThemeProvider = ({ children }) => {
     setUserOverride(true);
 
     const targetMode = theme === "light" ? "dark" : "light";
+    sessionStorage.setItem("theme-session", targetMode);
     const coords = getTransitionCoordinates(e);
     animateThemeTransition(targetMode, coords);
   };
@@ -147,6 +167,7 @@ export const ThemeProvider = ({ children }) => {
 
     localStorage.setItem("theme_override", "true");
     setUserOverride(true);
+    sessionStorage.setItem("theme-session", mode);
 
     const coords = getTransitionCoordinates(e);
     animateThemeTransition(mode, coords);

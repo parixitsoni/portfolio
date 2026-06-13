@@ -180,7 +180,7 @@ const ALL_COMMANDS = [
 ];
 
 // ─── Hook ──────────────────────────────────────────────────────────────────────
-export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => {
+export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode, theme) => {
   const [consoleInput, setConsoleInput] = useState("");
   const [consoleLogs, setConsoleLogs] = useState([]);
   const [userName, setUserName] = useState("");
@@ -235,6 +235,33 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
   };
   const triggerGlobalThemeUpdate = async (viewValue, key) => {
     if (typeof window !== "undefined") {
+      const activeMode = theme || "dark";
+      const configVal = `${viewValue}_${activeMode}`;
+
+      // 1. Update the live remote key-value database (works in production/live)
+      try {
+        const updateUrl = `https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/hft1qyrf/portfolio_config/${configVal}`;
+        const response = await fetch(updateUrl, { method: "POST", body: "a" });
+        const text = await response.text();
+        if (text.trim() === "true") {
+          setConsoleLogs(prev => [
+            ...prev,
+            { text: `✔ Success: Live database configuration updated to ${viewValue} (${activeMode} mode) for all production visitors.`, type: "system" }
+          ]);
+        } else {
+          setConsoleLogs(prev => [
+            ...prev,
+            { text: "⚠ Failed to update live database configuration.", type: "error" }
+          ]);
+        }
+      } catch (err) {
+        setConsoleLogs(prev => [
+          ...prev,
+          { text: `⚠ Network error updating live configuration: ${err.message}`, type: "error" }
+        ]);
+      }
+
+      // 2. Update local config file for version control (only when running on localhost)
       const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
       if (isLocalhost) {
         try {
@@ -243,25 +270,17 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
           if (data.success) {
             setConsoleLogs(prev => [
               ...prev,
-              { text: "✔ Success: Global default theme configuration updated in theme-config.js.", type: "system" }
+              { text: "✔ Success: Local theme-config.js file updated for version control.", type: "system" }
             ]);
           } else {
             setConsoleLogs(prev => [
               ...prev,
-              { text: `⚠ Failed to update global theme file: ${data.error}`, type: "error" }
+              { text: `⚠ Failed to update local theme file: ${data.error}`, type: "error" }
             ]);
           }
         } catch (err) {
-          setConsoleLogs(prev => [
-            ...prev,
-            { text: "⚠ Local sidecar server (port 3001) not responding. Global theme file was not modified on disk.", type: "error" }
-          ]);
+          // Silent local sidecar fail, live config was already saved
         }
-      } else {
-        setConsoleLogs(prev => [
-          ...prev,
-          { text: "ℹ Note: You are in a production environment. Global theme change cannot be written to server disk directly. Please run this command in your local development environment to update the codebase default configuration, then commit and deploy.", type: "system" }
-        ]);
       }
     }
   };

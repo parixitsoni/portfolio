@@ -65,7 +65,7 @@ export const DeveloperWorkspace = () => {
     currentPath,
     suggestionText,
     isExiting,
-  } = useTerminal(toggleTheme, setTerminalMinimized, setThemeMode);
+  } = useTerminal(toggleTheme, setTerminalMinimized, setThemeMode, theme);
 
   // Update clock
   useEffect(() => {
