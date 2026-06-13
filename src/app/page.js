@@ -7,7 +7,6 @@ import { Experience } from "../components/Experience";
 import { Skills } from "../components/Skills";
 import { Education } from "../components/Education";
 import { Projects } from "../components/Projects";
-import { Blog } from "../components/Blog";
 import { Footer } from "../components/Footer";
 import { DeveloperWorkspace } from "../components/DeveloperWorkspace";
 import { THEME_CONFIG } from "../constants/theme-config";
@@ -60,7 +59,6 @@ export default function Home() {
         <Experience />
         <Skills />
         <Projects />
-        <Blog />
         <Education />
         <Footer />
       </main>

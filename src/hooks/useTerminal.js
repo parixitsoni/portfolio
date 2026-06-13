@@ -10,7 +10,7 @@ const VIRTUAL_FS = {
   "/home": { type: "dir", children: ["parixit"] },
   [HOME]: {
     type: "dir",
-    children: ["profile", "experience", "projects", "blog", "academic", "contact", "resume.pdf", ".bashrc"]
+    children: ["profile", "experience", "projects", "academic", "contact", "resume.pdf", ".bashrc"]
   },
   [`${HOME}/profile`]: { type: "dir", children: ["bio.md"] },
   [`${HOME}/profile/bio.md`]: {
@@ -64,11 +64,6 @@ With over 4.2 years of professional experience, I specialize in crafting high-pe
   [`${HOME}/contact/contact_info.txt`]: {
     type: "file", size: "128B",
     content: "PARIXIT SONI - CONTACT FILE\n===========================\nEmail    : parikshitsoni85@gmail.com\nPhone    : +91-759-719-1971\nGitHub   : github.com/parixitsoni\nLinkedIn : linkedin.com/in/parixitsoni\nPortfolio: https://parixit.vercel.app"
-  },
-  [`${HOME}/blog`]: { type: "dir", children: ["view_transitions.md"] },
-  [`${HOME}/blog/view_transitions.md`]: {
-    type: "file", size: "3.2K",
-    content: `# Demystifying CSS View Transitions & Circular Clip-Path Reveals\n\nTraditionally, transitions between different states or pages on the web required complex DOM manipulation, tracking of old/new elements, absolute positioning overlays, and elaborate library animations (such as Framer Motion or GSAP).\n\nThe modern CSS View Transition API completely redefines this paradigm by allowing developers to create seamless animated transitions between DOM states with minimal effort. Combined with dynamic SVG/CSS Clip-Paths, we can achieve immersive visual effects, like circular canvas reveals, that make user interfaces feel organic and responsive.`
   },
   [`${HOME}/resume.pdf`]: { type: "file", size: "124K", content: "[Binary PDF — Parixit Soni Resume. Use: resume command to download]" },
   [`${HOME}/.bashrc`]: {
@@ -774,11 +769,21 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
             if (secondArg === "classic") {
               localStorage.setItem("portfolio-view", "classic");
               newLogs.push({ text: "Primary theme layout set to Classic Theme. On initial loads, this theme will now be visible by default.", type: "system" });
+              newLogs.push({ text: "Applying and switching theme layout...", type: "system" });
+              setConsoleLogs([...newLogs]);
               triggerGlobalThemeUpdate("classic", keyPassed);
+              setTimeout(() => {
+                handleThemeRedirect("classic");
+              }, 1200);
             } else if (secondArg === "interactive" || secondArg === "workspace") {
               localStorage.setItem("portfolio-view", "workspace");
               newLogs.push({ text: "Primary theme layout set to Interactive Workspace Theme. On initial loads, this theme will now be visible by default.", type: "system" });
+              newLogs.push({ text: "Applying and switching theme layout...", type: "system" });
+              setConsoleLogs([...newLogs]);
               triggerGlobalThemeUpdate("workspace", keyPassed);
+              setTimeout(() => {
+                handleThemeRedirect("workspace");
+              }, 1200);
             } else {
               newLogs.push({ text: "Usage: theme --set-primary [classic|interactive] --key <secret_key>", type: "error" });
             }

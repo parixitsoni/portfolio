@@ -29,7 +29,6 @@ export const DeveloperWorkspace = () => {
     profile: true,
     experience: true,
     projects: true,
-    blog: false,
     academic: false,
     contact: false
   });
@@ -146,7 +145,6 @@ export const DeveloperWorkspace = () => {
       profile: true,
       experience: true,
       projects: true,
-      blog: true,
       academic: true,
       contact: true
     });
@@ -157,7 +155,6 @@ export const DeveloperWorkspace = () => {
       profile: false,
       experience: false,
       projects: false,
-      blog: false,
       academic: false,
       contact: false
     });

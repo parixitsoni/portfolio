@@ -1,4 +1,4 @@
-import { Home, User, Briefcase, Code, GraduationCap, BookOpen, Layers } from "lucide-react";
+import { Home, User, Briefcase, Code, GraduationCap, Layers } from "lucide-react";
 
 export const NAV_LINKS = [
   { label: "Home", href: "/", icon: Home, id: "home" },
@@ -11,7 +11,6 @@ export const NAV_LINKS = [
   },
   { label: "Skills", href: "/#skills", icon: Code, id: "skills" },
   { label: "Projects", href: "/#projects", icon: Layers, id: "projects" },
-  { label: "Blog", href: "/#blog", icon: BookOpen, id: "blog" },
   {
     label: "Education",
     href: "/#education",

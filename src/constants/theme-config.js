@@ -1,7 +1,7 @@
 export const THEME_CONFIG = {
   // Global Default Theme choice for new visitors.
   // Set to "classic" for standard scrolling layout, or "workspace" for interactive IDE theme.
-  defaultView: "workspace",
+  defaultView: "classic", // owner-set: classic
   currentTheme: "main",
   mainThemeUrl: "https://parixit.vercel.app",
   theme1Url: "https://portfolio-git-theme-interactive-network-parixitsoni.vercel.app",
