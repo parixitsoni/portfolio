@@ -175,23 +175,23 @@ export const DynamicProductList = () => {
         content: `import React from 'react';
 import { JewelleryShowcase } from 'bms-jewels-web';
 
-// BMS Jewels - Luxury Jewellery Catalog
+// BMS Jewels - A Unit of Bhagwan Lal Moolchand Soni
 export const BmsJewelsShowcase = () => {
   return (
     <JewelleryShowcase
       url="https://www.bmsjewels.com/"
       title="BMS Jewels"
       tech={["Next.js", "React", "Tailwind CSS", "Framer Motion"]}
-      description="An elegant, high-end catalog showcase built for a premier hallmarked gold & silver jewellery store."
+      description="Bilingual visual catalog and live bullion rate system built for Deogarh's premier gold & silver jewellery store."
     />
   );
 };`,
         previewType: "project",
         data: {
           title: "BMS Jewels",
-          subtitle: "Jewellery Showcase & Catalog",
+          subtitle: "A Unit of Bhagwan Lal Moolchand Soni",
           url: "https://www.bmsjewels.com/",
-          desc: "An elegant, high-end catalog showcase built for Bhagwan Lal Moolchand Soni (BMS Jewels), a premier gold and silver jewellery retailer. Designed with luxury aesthetics, high-res galleries, and interactive query panels.",
+          desc: "A premium bilingual (Hindi/English) visual catalog and live bullion rates tracking platform developed for Deogarh's leading jewellery brand, Bhagwan Lal Moolchand Soni (BMS Jewels). Designed with luxury aesthetics, interactive catalog exploration panels, BIS certification validation, and direct WhatsApp Business chat shortcuts.",
           tech: ["Next.js", "React", "Tailwind CSS", "Framer Motion"]
         }
       }

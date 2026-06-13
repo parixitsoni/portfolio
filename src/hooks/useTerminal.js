@@ -53,7 +53,7 @@ With over 4.2 years of professional experience, I specialize in crafting high-pe
   },
   [`${HOME}/projects/bms_jewels.jsx`]: {
     type: "file", size: "1.5K",
-    content: "import React from 'react';\nimport { JewelleryShowcase } from 'bms-jewels-web';\n\n// BMS Jewels - Luxury Jewellery Catalog\nexport const BmsJewelsShowcase = () => (\n  <JewelleryShowcase\n    url=\"https://www.bmsjewels.com/\"\n    title=\"BMS Jewels\"\n    tech={[\"Next.js\", \"React\", \"Tailwind CSS\", \"Framer Motion\"]}\n  />\n);"
+    content: "import React from 'react';\nimport { JewelleryShowcase } from 'bms-jewels-web';\n\n// BMS Jewels - A Unit of Bhagwan Lal Moolchand Soni\nexport const BmsJewelsShowcase = () => (\n  <JewelleryShowcase\n    url=\"https://www.bmsjewels.com/\"\n    title=\"BMS Jewels\"\n    tech={[\"Next.js\", \"React\", \"Tailwind CSS\", \"Framer Motion\"]}\n    description=\"Bilingual visual catalog and live bullion rates tracking platform developed for Deogarh's leading gold & silver jewellery store.\"\n  />\n);"
   },
   [`${HOME}/academic`]: { type: "dir", children: ["degrees.json"] },
   [`${HOME}/academic/degrees.json`]: {

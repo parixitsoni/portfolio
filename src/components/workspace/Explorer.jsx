@@ -213,9 +213,7 @@ export const Explorer = ({
                         >
                           {getFileIcon(file)}
                           <span className="truncate font-sans font-semibold">
-                            {file.previewType === "work" && file.data?.company 
-                              ? file.data.company 
-                              : file.name}
+                            {file.name}
                           </span>
                         </button>
                       );

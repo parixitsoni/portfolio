@@ -42,18 +42,20 @@ const PROJECTS = [
   {
     id: "bms",
     title: "BMS Jewels",
-    subtitle: "Jewellery Showcase & Catalog",
-    category: "Luxury & E-Commerce",
+    subtitle: "A Unit of Bhagwan Lal Moolchand Soni",
+    category: "Luxury E-Commerce & Bullion",
     url: "https://www.bmsjewels.com/",
     screenshot: "/project-bms.png",
     description:
-      "An elegant, high-end e-commerce showcase website built for Bhagwan Lal Moolchand Soni (BMS Jewels). Features a luxury visual catalogue of hallmarked gold and certified diamond jewelry, repair booking, and a smooth, responsive shopping experience.",
-    stack: ["React", "Next.js", "Tailwind CSS", "Framer Motion"],
+      "A premium bilingual (Hindi/English) web catalog and live bullion rate platform designed for Deogarh's leading jewellery retailer. Features high-resolution visual galleries for gold, silver, and certified diamond jewelry, bespoke repair booking systems, and live commodity rate modules.",
+    stack: ["Next.js", "React", "Tailwind CSS", "Framer Motion"],
     highlights: [
-      { icon: ShoppingBag, label: "Product Catalog",  desc: "High-res gold & diamond jewelry gallery" },
-      { icon: Filter,      label: "Smart Sorting",    desc: "Filter by metal type, weight & price" },
-      { icon: ShieldCheck, label: "BIS Hallmarked",   desc: "Highlighting certified purity credentials" },
-      { icon: Zap,         label: "Fast & Responsive", desc: "Fully optimized for tablet & mobile viewports" },
+      { icon: ShoppingBag,     label: "Visual Atelier",    desc: "Handcrafted catalog showcasing gold & silver" },
+      { icon: Activity,        label: "Live Rates Feed",   desc: "Real-time bullion price tracking module" },
+      { icon: ShieldCheck,     label: "BIS Assurance",     desc: "100% BIS Hallmarked purity assurance" },
+      { icon: Package,         label: "Bespoke Services",  desc: "Valuation, stone replacement, and restoration" },
+      { icon: Users,           label: "Trust Network",     desc: "Global shipping & direct WhatsApp business api" },
+      { icon: Zap,             label: "High Performance",  desc: "Core Web Vitals optimized, multilingual support" },
     ],
   },
 ];
