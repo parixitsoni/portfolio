@@ -11,6 +11,7 @@ export const NAV_LINKS = [
   },
   { label: "Skills", href: "/#skills", icon: Code, id: "skills" },
   { label: "Projects", href: "/#projects", icon: Layers, id: "projects" },
+  { label: "Blog", href: "/#blog", icon: BookOpen, id: "blog" },
   {
     label: "Education",
     href: "/#education",

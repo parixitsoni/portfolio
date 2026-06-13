@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { getThemeRedirectUrl, handleThemeRedirect } from "../constants/theme-config";
+import { getThemeRedirectUrl, handleThemeRedirect, THEME_CONFIG } from "../constants/theme-config";
 import { VERSION_INFO } from "../constants/version-config";
 
 // ─── Virtual Filesystem ────────────────────────────────────────────────────────
@@ -10,7 +10,7 @@ const VIRTUAL_FS = {
   "/home": { type: "dir", children: ["parixit"] },
   [HOME]: {
     type: "dir",
-    children: ["profile", "experience", "projects", "academic", "contact", "resume.pdf", ".bashrc"]
+    children: ["profile", "experience", "projects", "blog", "academic", "contact", "resume.pdf", ".bashrc"]
   },
   [`${HOME}/profile`]: { type: "dir", children: ["bio.md"] },
   [`${HOME}/profile/bio.md`]: {
@@ -64,6 +64,11 @@ With over 4.2 years of professional experience, I specialize in crafting high-pe
   [`${HOME}/contact/contact_info.txt`]: {
     type: "file", size: "128B",
     content: "PARIXIT SONI - CONTACT FILE\n===========================\nEmail    : parikshitsoni85@gmail.com\nPhone    : +91-759-719-1971\nGitHub   : github.com/parixitsoni\nLinkedIn : linkedin.com/in/parixitsoni\nPortfolio: https://parixit.vercel.app"
+  },
+  [`${HOME}/blog`]: { type: "dir", children: ["view_transitions.md"] },
+  [`${HOME}/blog/view_transitions.md`]: {
+    type: "file", size: "3.2K",
+    content: `# Demystifying CSS View Transitions & Circular Clip-Path Reveals\n\nTraditionally, transitions between different states or pages on the web required complex DOM manipulation, tracking of old/new elements, absolute positioning overlays, and elaborate library animations (such as Framer Motion or GSAP).\n\nThe modern CSS View Transition API completely redefines this paradigm by allowing developers to create seamless animated transitions between DOM states with minimal effort. Combined with dynamic SVG/CSS Clip-Paths, we can achieve immersive visual effects, like circular canvas reveals, that make user interfaces feel organic and responsive.`
   },
   [`${HOME}/resume.pdf`]: { type: "file", size: "124K", content: "[Binary PDF — Parixit Soni Resume. Use: resume command to download]" },
   [`${HOME}/.bashrc`]: {
@@ -176,7 +181,7 @@ const runFind = (args, currentPath) => {
 const ALL_COMMANDS = [
   "cat", "cd", "clear", "cls", "contact", "dir", "download",
   "echo", "exit", "find", "git", "help", "history", "ls",
-  "mode", "projects", "pwd", "resume", "skills", "theme", "time", "whoami",
+  "mode", "projects", "pwd", "resume", "skills", "time", "whoami",
 ];
 
 // ─── Hook ──────────────────────────────────────────────────────────────────────
@@ -232,6 +237,38 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
         ]);
       }, delay * (index + 1));
     });
+  };
+  const triggerGlobalThemeUpdate = async (viewValue, key) => {
+    if (typeof window !== "undefined") {
+      const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      if (isLocalhost) {
+        try {
+          const response = await fetch(`http://localhost:3001/api/set-theme-default?view=${viewValue}&key=${encodeURIComponent(key)}`);
+          const data = await response.json();
+          if (data.success) {
+            setConsoleLogs(prev => [
+              ...prev,
+              { text: "✔ Success: Global default theme configuration updated in theme-config.js.", type: "system" }
+            ]);
+          } else {
+            setConsoleLogs(prev => [
+              ...prev,
+              { text: `⚠ Failed to update global theme file: ${data.error}`, type: "error" }
+            ]);
+          }
+        } catch (err) {
+          setConsoleLogs(prev => [
+            ...prev,
+            { text: "⚠ Local sidecar server (port 3001) not responding. Global theme file was not modified on disk.", type: "error" }
+          ]);
+        }
+      } else {
+        setConsoleLogs(prev => [
+          ...prev,
+          { text: "ℹ Note: You are in a production environment. Global theme change cannot be written to server disk directly. Please run this command in your local development environment to update the codebase default configuration, then commit and deploy.", type: "system" }
+        ]);
+      }
+    }
   };
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [savedInput, setSavedInput] = useState("");
@@ -574,7 +611,6 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
           newLogs.push({ text: "│  resume / download     Download resume PDF          │", type: "output" });
           newLogs.push({ text: "├─ SYSTEM ────────────────────────────────────────────┤", type: "output" });
           newLogs.push({ text: "│  git [log|status]      Mock Git history & status      │", type: "output" });
-          newLogs.push({ text: "│  theme [classic|inter] Switch active theme layout   │", type: "output" });
           newLogs.push({ text: "│  mode [dark|light]     Set theme dark/light mode    │", type: "output" });
           newLogs.push({ text: "│  time                  Show system time             │", type: "output" });
           newLogs.push({ text: "│  history               Show command history         │", type: "output" });
@@ -722,18 +758,29 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
 
         // ── theme ─────────────────────────────────────────────────────────────
         case "theme": {
-          const firstArg = args[0]?.toLowerCase();
-          const secondArg = args[1]?.toLowerCase();
+          const keyIndex = args.indexOf("--key");
+          const keyPassed = keyIndex !== -1 ? args[keyIndex + 1] : null;
+
+          if (keyPassed !== THEME_CONFIG.ownerKey) {
+            newLogs.push({ text: `${cmdRaw}: command not found. Type 'help' for available commands.`, type: "error" });
+            break;
+          }
+
+          const cleanArgs = args.filter((_, idx) => idx !== keyIndex && idx !== keyIndex + 1);
+          const firstArg = cleanArgs[0]?.toLowerCase();
+          const secondArg = cleanArgs[1]?.toLowerCase();
 
           if (firstArg === "--set-primary" || firstArg === "-p") {
             if (secondArg === "classic") {
               localStorage.setItem("portfolio-view", "classic");
               newLogs.push({ text: "Primary theme layout set to Classic Theme. On initial loads, this theme will now be visible by default.", type: "system" });
+              triggerGlobalThemeUpdate("classic", keyPassed);
             } else if (secondArg === "interactive" || secondArg === "workspace") {
               localStorage.setItem("portfolio-view", "workspace");
               newLogs.push({ text: "Primary theme layout set to Interactive Workspace Theme. On initial loads, this theme will now be visible by default.", type: "system" });
+              triggerGlobalThemeUpdate("workspace", keyPassed);
             } else {
-              newLogs.push({ text: "Usage: theme --set-primary [classic|interactive]", type: "error" });
+              newLogs.push({ text: "Usage: theme --set-primary [classic|interactive] --key <secret_key>", type: "error" });
             }
           } else if (firstArg === "classic") {
             newLogs.push({ text: "Switching to Classic Theme...", type: "system" });
@@ -754,7 +801,7 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
               handleThemeRedirect("classic");
             }, 300);
           } else {
-            newLogs.push({ text: "Usage: theme [classic|interactive] OR theme --set-primary [classic|interactive]", type: "error" });
+            newLogs.push({ text: "Usage: theme [classic|interactive] --key <secret_key> OR theme --set-primary [classic|interactive] --key <secret_key>", type: "error" });
           }
           break;
         }

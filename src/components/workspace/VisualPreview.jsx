@@ -1,6 +1,8 @@
 import React from "react";
-import { Calendar, MapPin, ExternalLink, GraduationCap, Mail, Phone, Download, CheckCircle2, Atom, Layers, Palette, Code2, Globe, Zap, BarChart3, Linkedin, Github, Send, Briefcase } from "lucide-react";
+import { Calendar, Clock, MapPin, ExternalLink, GraduationCap, Mail, Phone, Download, CheckCircle2, Atom, Layers, Palette, Code2, Globe, Zap, BarChart3, Linkedin, Github, Send, Briefcase } from "lucide-react";
 import { personalData } from "../../constants/personal-data";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const getTechIcon = (tech) => {
   const t = tech.toLowerCase();
@@ -399,6 +401,39 @@ export const VisualPreview = ({ activeFile }) => {
           
           <div className="pt-4 border-t border-slate-200 dark:border-slate-800/60 text-[9px] text-slate-400 dark:text-slate-500 font-sans italic font-bold">
             *Recruiter Note: Parixit built this modular update system using unified client-side state hooks to bridge classic and developer workspace layouts.
+          </div>
+        </div>
+      )}
+
+      {activeFile.previewType === "blog" && (
+        <div className="bg-white dark:bg-[#0c111d]/85 backdrop-blur-xl p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xl space-y-4 transition-colors duration-300 select-text">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 border-b border-slate-200 dark:border-slate-800/60 pb-4">
+            <div>
+              <span className="px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/25 text-sky-600 dark:text-sky-400 text-[10px] font-black uppercase tracking-wider font-heading">
+                {activeFile.data.category}
+              </span>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-3 font-heading leading-tight">
+                {activeFile.data.title}
+              </h2>
+            </div>
+            <div className="text-right shrink-0">
+              <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 justify-end">
+                <Calendar size={12} className="text-sky-500" />
+                {activeFile.data.date}
+              </div>
+              <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 justify-end mt-1">
+                <Clock size={12} className="text-indigo-500" />
+                {activeFile.data.readTime}
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <article className="prose prose-sky dark:prose-invert max-w-none text-slate-700 dark:text-slate-350 font-sans leading-relaxed text-justify">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {activeFile.content}
+              </ReactMarkdown>
+            </article>
           </div>
         </div>
       )}
