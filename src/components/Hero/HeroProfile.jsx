@@ -10,7 +10,7 @@ export const HeroProfile = () => {
       <div className="absolute -inset-4 border border-sky-500/10 rounded-[5rem] animate-[spin_20s_linear_infinite]"></div>
       <div className="absolute -inset-8 border border-blue-500/5 rounded-[6rem] animate-[spin_30s_linear_infinite_reverse]"></div>
 
-      <div className="w-64 h-72 md:w-80 md:h-[24rem] rounded-[3.5rem] relative z-10 transition-transform duration-700 overflow-hidden group-hover:scale-[1.05]">
+      <div className="w-64 h-72 lg:w-80 lg:h-[24rem] rounded-[3.5rem] relative z-10 transition-transform duration-700 overflow-hidden group-hover:scale-[1.05]">
         <img
           src={getAssetPath("/parixit-bios-img.png")}
           alt="Parixit Soni"

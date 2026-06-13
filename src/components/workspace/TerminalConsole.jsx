@@ -30,21 +30,26 @@ export const TerminalConsole = ({
   // ── Drag/Touch-to-resize handler ─────────────────────────────────────────────
   const handleResizeStart = useCallback((e) => {
     const isTouch = e.type === "touchstart";
-    
-    // Prevent default scrolling when dragging to resize
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-    
     const startY = isTouch ? e.touches[0].clientY : e.clientY;
     const startHeight = terminalHeight;
+    let hasMoved = false;
 
     const onMove = (ev) => {
       const currentY = ev.type === "touchmove" ? ev.touches[0].clientY : ev.clientY;
       const delta = startY - currentY; // drag up = larger terminal
-      const maxH = window.innerHeight * 0.75;
-      const newH = Math.max(80, Math.min(maxH, startHeight + delta));
-      setTerminalHeight(newH);
+      
+      if (Math.abs(delta) > 5) {
+        hasMoved = true;
+        if (terminalMinimized && delta > 0) {
+          setTerminalMinimized(false);
+        }
+      }
+
+      if (!terminalMinimized || (hasMoved && delta > 0)) {
+        const maxH = window.innerHeight * 0.75;
+        const newH = Math.max(80, Math.min(maxH, startHeight + delta));
+        setTerminalHeight(newH);
+      }
     };
 
     const onUp = () => {
@@ -55,6 +60,11 @@ export const TerminalConsole = ({
         document.removeEventListener("mousemove", onMove);
         document.removeEventListener("mouseup", onUp);
       }
+
+      // If mouse did not move significantly, toggle minimize/maximize state
+      if (!hasMoved) {
+        setTerminalMinimized(prev => !prev);
+      }
     };
 
     if (isTouch) {
@@ -64,7 +74,7 @@ export const TerminalConsole = ({
       document.addEventListener("mousemove", onMove);
       document.addEventListener("mouseup", onUp);
     }
-  }, [terminalHeight, setTerminalHeight]);
+  }, [terminalHeight, setTerminalHeight, terminalMinimized, setTerminalMinimized]);
 
   return (
     <footer
@@ -74,27 +84,17 @@ export const TerminalConsole = ({
       style={!terminalMinimized ? { height: `${terminalHeight}px` } : undefined}
     >
 
-      {/* ── Drag/Touch resize handle (top of panel) ── */}
-      {!terminalMinimized && (
-        <div
-          onMouseDown={handleResizeStart}
-          onTouchStart={handleResizeStart}
-          className="flex h-3 md:h-2 cursor-ns-resize items-center justify-center shrink-0 bg-slate-200/50 dark:bg-slate-900/50 hover:bg-sky-500/25 dark:hover:bg-sky-500/20 group transition-colors border-b border-slate-200/40 dark:border-slate-800/40 touch-none"
-          title="Drag to resize terminal"
-        >
-          <GripHorizontal
-            size={12}
-            className="text-slate-400 dark:text-slate-600 opacity-60 md:opacity-0 group-hover:opacity-100 transition-opacity"
-          />
-        </div>
-      )}
-
-      {/* ── Desktop title bar + tab switcher ── */}
+      {/* ── Desktop title bar + tab switcher (acts as drag handle) ── */}
       <div
-        onClick={() => setTerminalMinimized(!terminalMinimized)}
-        className="hidden md:flex h-8 bg-slate-200/90 dark:bg-[#0c121e]/80 border-b border-slate-300 dark:border-slate-800/60 px-3 items-center justify-between shrink-0 w-full select-none cursor-pointer hover:bg-slate-300/40 dark:hover:bg-[#0c121e]/100 transition-colors"
+        onMouseDown={handleResizeStart}
+        onTouchStart={handleResizeStart}
+        className="hidden md:flex h-8 bg-slate-200/90 dark:bg-[#0c121e]/80 border-b border-slate-300 dark:border-slate-800/60 px-3 items-center justify-between shrink-0 w-full select-none cursor-ns-resize hover:bg-slate-300/40 dark:hover:bg-[#0c121e]/100 transition-colors relative"
       >
-        <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 z-10"
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
           <Terminal size={11} className="text-sky-600 dark:text-sky-500" />
           <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 font-heading">
             Console
@@ -117,21 +117,43 @@ export const TerminalConsole = ({
             ))}
           </div>
         </div>
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); setTerminalMinimized(!terminalMinimized); }}
-          className="p-1 rounded text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-300/40 dark:hover:bg-slate-800/60 transition-all cursor-pointer"
+
+        {/* Centered Grip Icon (visual resizing cue) */}
+        {!terminalMinimized && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+            <GripHorizontal
+              size={12}
+              className="text-slate-400 dark:text-slate-600 opacity-60"
+            />
+          </div>
+        )}
+
+        <div 
+          className="z-10"
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
         >
-          {terminalMinimized ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-        </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setTerminalMinimized(!terminalMinimized); }}
+            className="p-1 rounded text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-300/40 dark:hover:bg-slate-800/60 transition-all cursor-pointer"
+          >
+            {terminalMinimized ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+          </button>
+        </div>
       </div>
 
-      {/* ── Mobile tab headers ── */}
+      {/* ── Mobile tab headers (acts as drag handle) ── */}
       <div
-        onClick={() => setTerminalMinimized(!terminalMinimized)}
-        className="flex md:hidden border-b border-slate-200 dark:border-slate-800/80 bg-slate-200/90 dark:bg-[#0c121e]/50 px-2 shrink-0 w-full justify-between items-center h-9 select-none cursor-pointer"
+        onMouseDown={handleResizeStart}
+        onTouchStart={handleResizeStart}
+        className="flex md:hidden border-b border-slate-200 dark:border-slate-800/80 bg-slate-200/90 dark:bg-[#0c121e]/50 px-2 shrink-0 w-full justify-between items-center h-9 select-none cursor-ns-resize relative"
       >
-        <div className="flex flex-1 h-full">
+        <div 
+          className="flex flex-1 h-full z-10"
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
           {["terminal", "diagnostics"].map(tab => (
             <button
               key={tab}
@@ -147,13 +169,30 @@ export const TerminalConsole = ({
             </button>
           ))}
         </div>
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); setTerminalMinimized(!terminalMinimized); }}
-          className="p-1 rounded text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white mr-1 cursor-pointer"
+
+        {/* Centered Grip Icon (visual resizing cue) */}
+        {!terminalMinimized && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+            <GripHorizontal
+              size={12}
+              className="text-slate-400 dark:text-slate-600 opacity-60"
+            />
+          </div>
+        )}
+
+        <div 
+          className="z-10"
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
         >
-          {terminalMinimized ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setTerminalMinimized(!terminalMinimized); }}
+            className="p-1 rounded text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white mr-1 cursor-pointer"
+          >
+            {terminalMinimized ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+        </div>
       </div>
 
       <div className={`flex-1 flex flex-col overflow-hidden w-full ${
@@ -255,7 +294,9 @@ export const TerminalConsole = ({
                 autoFocus
                 autoComplete="off"
                 spellCheck={false}
+                enterKeyHint="go"
               />
+              <button type="submit" className="hidden" aria-hidden="true" />
             </div>
           </form>
         </div>

@@ -39,6 +39,23 @@ const PROJECTS = [
       { icon: Zap,         label: "Fast Performance", desc: "Optimized renders with React memo" },
     ],
   },
+  {
+    id: "bms",
+    title: "BMS Jewels",
+    subtitle: "Jewellery Showcase & Catalog",
+    category: "Luxury & E-Commerce",
+    url: "https://www.bmsjewels.com/",
+    screenshot: "/project-bms.png",
+    description:
+      "An elegant, high-end e-commerce showcase website built for Bhagwan Lal Moolchand Soni (BMS Jewels). Features a luxury visual catalogue of hallmarked gold and certified diamond jewelry, repair booking, and a smooth, responsive shopping experience.",
+    stack: ["React", "Next.js", "Tailwind CSS", "Framer Motion"],
+    highlights: [
+      { icon: ShoppingBag, label: "Product Catalog",  desc: "High-res gold & diamond jewelry gallery" },
+      { icon: Filter,      label: "Smart Sorting",    desc: "Filter by metal type, weight & price" },
+      { icon: ShieldCheck, label: "BIS Hallmarked",   desc: "Highlighting certified purity credentials" },
+      { icon: Zap,         label: "Fast & Responsive", desc: "Fully optimized for tablet & mobile viewports" },
+    ],
+  },
 ];
 
 export const Projects = () => {

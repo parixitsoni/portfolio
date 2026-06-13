@@ -20,22 +20,6 @@ With over 4.2 years of professional experience, I specialize in crafting high-pe
 - **Accessibility**: Engineering WCAG 2.1 AA compliant elements.
 - **Scale**: Designing modular, clean codebases using design systems.`,
         previewType: "profile"
-      },
-      "system_updates.md": {
-        name: "system_updates.md",
-        type: "markdown",
-        content: `# Portfolio System Updates & Release Notes
-
-Current Version: v${VERSION_INFO.version}
-Last Updated   : ${VERSION_INFO.lastUpdated}
-
-## Latest Features
-${updateListMarkdown}
-
----
-*Recruiter Note: Parixit built this modular update system using unified client-side state hooks to bridge classic and developer workspace layouts.*`,
-        previewType: "updates",
-        data: VERSION_INFO
       }
     }
   },
@@ -183,6 +167,32 @@ export const DynamicProductList = () => {
           url: "https://dynamic-productlist.vercel.app/",
           desc: "A sleek e-commerce list application demonstrating advanced state management, debounced search filters, and layout optimizations.",
           tech: ["React.js", "Vite", "CSS Modules", "REST API"]
+        }
+      },
+      "bms_jewels.jsx": {
+        name: "bms_jewels.jsx",
+        type: "javascript",
+        content: `import React from 'react';
+import { JewelleryShowcase } from 'bms-jewels-web';
+
+// BMS Jewels - Luxury Jewellery Catalog
+export const BmsJewelsShowcase = () => {
+  return (
+    <JewelleryShowcase
+      url="https://www.bmsjewels.com/"
+      title="BMS Jewels"
+      tech={["Next.js", "React", "Tailwind CSS", "Framer Motion"]}
+      description="An elegant, high-end catalog showcase built for a premier hallmarked gold & silver jewellery store."
+    />
+  );
+};`,
+        previewType: "project",
+        data: {
+          title: "BMS Jewels",
+          subtitle: "Jewellery Showcase & Catalog",
+          url: "https://www.bmsjewels.com/",
+          desc: "An elegant, high-end catalog showcase built for Bhagwan Lal Moolchand Soni (BMS Jewels), a premier gold and silver jewellery retailer. Designed with luxury aesthetics, high-res galleries, and interactive query panels.",
+          tech: ["Next.js", "React", "Tailwind CSS", "Framer Motion"]
         }
       }
     }

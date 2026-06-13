@@ -12,7 +12,7 @@ const VIRTUAL_FS = {
     type: "dir",
     children: ["profile", "experience", "projects", "academic", "contact", "resume.pdf", ".bashrc"]
   },
-  [`${HOME}/profile`]: { type: "dir", children: ["bio.md", "system_updates.md"] },
+  [`${HOME}/profile`]: { type: "dir", children: ["bio.md"] },
   [`${HOME}/profile/bio.md`]: {
     type: "file", size: "2.4K",
     content: `# Biography - Parixit Soni
@@ -25,19 +25,6 @@ With over 4.2 years of professional experience, I specialize in crafting high-pe
 - **Performance**: Optimizing Core Web Vitals for fluid page responsiveness.
 - **Accessibility**: Engineering WCAG 2.1 AA compliant elements.
 - **Scale**: Designing modular, clean codebases using design systems.`
-  },
-  [`${HOME}/profile/system_updates.md`]: {
-    type: "file", size: "1.2K",
-    content: `# Portfolio System Updates & Release Notes
-
-Current Version: v${VERSION_INFO.version}
-Last Updated   : ${VERSION_INFO.lastUpdated}
-
-## Latest Features
-${VERSION_INFO.changelog.map(item => `- ${item}`).join("\n")}
-
----
-*Recruiter Note: Parixit built this modular update system using unified client-side state hooks to bridge classic and developer workspace layouts.*`
   },
   [`${HOME}/experience`]: {
     type: "dir",
@@ -55,7 +42,7 @@ ${VERSION_INFO.changelog.map(item => `- ${item}`).join("\n")}
     type: "file", size: "640B",
     content: '{\n  "company": "IndiaNIC Infotech",\n  "title": "Frontend Developer",\n  "duration": "Aug 2021 — Oct 2023",\n  "location": "Ahmedabad, GJ (Remote)"\n}'
   },
-  [`${HOME}/projects`]: { type: "dir", children: ["hsl_dashboard.jsx", "product_list.jsx"] },
+  [`${HOME}/projects`]: { type: "dir", children: ["hsl_dashboard.jsx", "product_list.jsx", "bms_jewels.jsx"] },
   [`${HOME}/projects/hsl_dashboard.jsx`]: {
     type: "file", size: "1.8K",
     content: "import React from 'react';\nimport { ClinicalDashboard } from 'hsl-clinical-command';\n\n// HSL Clinical Dashboard - SaaS Medical command center\nexport const HslClinicalDashboard = () => (\n  <ClinicalDashboard\n    url=\"https://hsl-clinical-dashboard.vercel.app/\"\n    title=\"HSL Dashboard\"\n    tech={[\"Next.js\", \"React\", \"Tailwind CSS\", \"Recharts\"]}\n  />\n);"
@@ -63,6 +50,10 @@ ${VERSION_INFO.changelog.map(item => `- ${item}`).join("\n")}
   [`${HOME}/projects/product_list.jsx`]: {
     type: "file", size: "1.2K",
     content: "import React from 'react';\nimport { EcomProducts } from 'dynamic-ecom-showcase';\n\n// Dynamic Product List - E-Commerce Showcase\nexport const DynamicProductList = () => (\n  <EcomProducts\n    url=\"https://dynamic-productlist.vercel.app/\"\n    title=\"E-Commerce Showcase\"\n    tech={[\"React.js\", \"Vite\", \"CSS Modules\", \"REST API\"]}\n  />\n);"
+  },
+  [`${HOME}/projects/bms_jewels.jsx`]: {
+    type: "file", size: "1.5K",
+    content: "import React from 'react';\nimport { JewelleryShowcase } from 'bms-jewels-web';\n\n// BMS Jewels - Luxury Jewellery Catalog\nexport const BmsJewelsShowcase = () => (\n  <JewelleryShowcase\n    url=\"https://www.bmsjewels.com/\"\n    title=\"BMS Jewels\"\n    tech={[\"Next.js\", \"React\", \"Tailwind CSS\", \"Framer Motion\"]}\n  />\n);"
   },
   [`${HOME}/academic`]: { type: "dir", children: ["degrees.json"] },
   [`${HOME}/academic/degrees.json`]: {
@@ -113,8 +104,8 @@ export const formatDisplayPath = (path) => {
 // ─── Filesystem Command Runners ────────────────────────────────────────────────
 const runLs = (args, currentPath) => {
   const showHidden = args.some(a => ["-a", "-la", "-al", "-lah", "-lA"].includes(a));
-  const longFormat  = args.some(a => ["-l", "-la", "-al", "-lr", "-rl"].includes(a));
-  const reverse     = args.some(a => ["-r", "-lr", "-rl"].includes(a));
+  const longFormat = args.some(a => ["-l", "-la", "-al", "-lr", "-rl"].includes(a));
+  const reverse = args.some(a => ["-r", "-lr", "-rl"].includes(a));
 
   const pathArg = args.find(a => !a.startsWith("-"));
   const targetPath = pathArg ? resolvePath(currentPath, pathArg) : currentPath;
@@ -137,9 +128,9 @@ const runLs = (args, currentPath) => {
     for (const child of children) {
       const childPath = `${targetPath}/${child}`;
       const childNode = VIRTUAL_FS[childPath];
-      const isDir  = childNode?.type === "dir";
-      const perm   = isDir ? "drwxr-xr-x" : "-rw-r--r--";
-      const size   = (childNode?.size || "0B").padStart(6);
+      const isDir = childNode?.type === "dir";
+      const perm = isDir ? "drwxr-xr-x" : "-rw-r--r--";
+      const size = (childNode?.size || "0B").padStart(6);
       logs.push({ text: `${perm}  parixit  parixit  ${size}  ${child}`, type: "output" });
     }
     return logs;
@@ -159,11 +150,11 @@ const runFind = (args, currentPath) => {
     return [{ text: "Usage: find [directory] -name [pattern]", type: "error" }];
   }
 
-  const pattern    = args[nameIdx + 1].replace(/^['"]|['"]$/g, "");
-  const searchArg  = args.find(a => !a.startsWith("-") && a !== args[nameIdx + 1]);
-  const searchDir  = searchArg ? resolvePath(currentPath, searchArg) : currentPath;
-  const regexStr   = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*").replace(/\?/g, ".");
-  const regex      = new RegExp(`^${regexStr}$`, "i");
+  const pattern = args[nameIdx + 1].replace(/^['"]|['"]$/g, "");
+  const searchArg = args.find(a => !a.startsWith("-") && a !== args[nameIdx + 1]);
+  const searchDir = searchArg ? resolvePath(currentPath, searchArg) : currentPath;
+  const regexStr = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*").replace(/\?/g, ".");
+  const regex = new RegExp(`^${regexStr}$`, "i");
 
   const results = [];
   const search = (dirPath) => {
@@ -190,25 +181,25 @@ const ALL_COMMANDS = [
 
 // ─── Hook ──────────────────────────────────────────────────────────────────────
 export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => {
-  const [consoleInput, setConsoleInput]     = useState("");
-  const [consoleLogs, setConsoleLogs]       = useState([]);
-  const [userName, setUserName]             = useState("");
+  const [consoleInput, setConsoleInput] = useState("");
+  const [consoleLogs, setConsoleLogs] = useState([]);
+  const [userName, setUserName] = useState("");
   const [promptNameMode, setPromptNameMode] = useState(false);
   const [commandHistory, setCommandHistory] = useState([]);
-  
+
   // Interactive SMTP contact form states
   const [smtpStep, setSmtpStep] = useState(null); // null, 'name', 'email', 'message'
   const [smtpData, setSmtpData] = useState({ name: "", email: "", message: "" });
 
-  const customPrompt = promptNameMode 
-    ? "name" 
-    : smtpStep 
-      ? `contact(${smtpStep})` 
+  const customPrompt = promptNameMode
+    ? "name"
+    : smtpStep
+      ? `contact(${smtpStep})`
       : null;
 
   const simulateSmtpSend = (data) => {
     let delay = 500;
-    
+
     const steps = [
       { text: "Resolving SMTP server for parikshitsoni85@gmail.com...", className: "text-slate-400 dark:text-slate-500" },
       { text: "Connecting to mail.gmx.com [74.208.5.2] on port 587...", className: "text-slate-400 dark:text-slate-500" },
@@ -242,11 +233,11 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
       }, delay * (index + 1));
     });
   };
-  const [historyIndex, setHistoryIndex]     = useState(-1);
-  const [savedInput, setSavedInput]         = useState("");
-  const [currentPath, setCurrentPath]       = useState(HOME);
-  const [prevPath, setPrevPath]             = useState(HOME);
-  const [isExiting, setIsExiting]           = useState(false);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [savedInput, setSavedInput] = useState("");
+  const [currentPath, setCurrentPath] = useState(HOME);
+  const [prevPath, setPrevPath] = useState(HOME);
+  const [isExiting, setIsExiting] = useState(false);
   const terminalEndRef = useRef(null);
 
   // Initialize terminal on mount
@@ -277,8 +268,8 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
   // ── Tab completion helper ───────────────────────────────────────────────────
   const getTabCompletion = (inputVal, path) => {
     const parts = inputVal.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [inputVal];
-    const cmd   = parts[0];
-    const arg   = parts.length > 1 ? parts[parts.length - 1] : "";
+    const cmd = parts[0];
+    const arg = parts.length > 1 ? parts[parts.length - 1] : "";
 
     if (parts.length === 1) {
       // Complete the command name
@@ -420,7 +411,7 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
   const handleTerminalSubmit = (e) => {
     e.preventDefault();
     const inputVal = consoleInput.trim();
-    
+
     // If empty input during interactive session, prompt user
     if (!inputVal && smtpStep) {
       const disp = `contact(${smtpStep})`;
@@ -431,13 +422,13 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
       ]);
       return;
     }
-    
+
     if (!inputVal) return;
 
     // Interactive SMTP contact session
     if (smtpStep) {
       const disp = `contact(${smtpStep})`;
-      
+
       // Allow cancellation
       if (inputVal.toLowerCase() === "cancel" || inputVal.toLowerCase() === "exit") {
         setSmtpStep(null);
@@ -488,13 +479,13 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
         const finalData = { ...smtpData, message: inputVal };
         setSmtpStep(null);
         setConsoleInput("");
-        
+
         setConsoleLogs(prev => [
           ...prev,
           { text: inputVal, prompt: disp, type: "input" },
           { text: "Initiating SMTP simulation...", type: "system" }
         ]);
-        
+
         simulateSmtpSend(finalData);
         return;
       }
@@ -503,7 +494,7 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
     // Security check - prevent external links, script injections, and shell injection characters
     const hasUrl = /https?:\/\/[^\s]+/i.test(inputVal) || /www\.[a-z0-9]+/i.test(inputVal);
     const hasInjection = /[;&|`\\<>$\(\)]/g.test(inputVal);
-    
+
     if (hasUrl || hasInjection) {
       const disp = formatDisplayPath(currentPath);
       const newLogs = [
@@ -539,12 +530,12 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
     setHistoryIndex(-1);
 
     // Parse raw input into cmd + args (respects quoted strings)
-    const parts   = inputVal.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [];
-    const cmdRaw  = parts[0].toLowerCase();
-    const args    = parts.slice(1).map(a => a.replace(/^['"]|['"]$/g, ""));
+    const parts = inputVal.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [];
+    const cmdRaw = parts[0].toLowerCase();
+    const args = parts.slice(1).map(a => a.replace(/^['"]|['"]$/g, ""));
 
-    const disp     = formatDisplayPath(currentPath);
-    const newLogs  = [...consoleLogs, { text: inputVal, prompt: disp, type: "input" }];
+    const disp = formatDisplayPath(currentPath);
+    const newLogs = [...consoleLogs, { text: inputVal, prompt: disp, type: "input" }];
 
     // Autocorrect single-word commands
     let cmd = cmdRaw;
@@ -698,7 +689,7 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
             newLogs.push({ text: "", type: "output" });
             newLogs.push({ text: "    feat: add mock git history, SMTP contact forms, and custom skills CLI commands", type: "output", className: "text-slate-400 dark:text-slate-300" });
             newLogs.push({ text: "", type: "output" });
-            
+
             newLogs.push({ text: "commit a712bc90fa6b4c123d8e907d6a5c128f", type: "output", className: "text-yellow-600 dark:text-yellow-500" });
             newLogs.push({ text: "Author: Parixit Soni <parikshitsoni85@gmail.com>", type: "output" });
             newLogs.push({ text: "Date:   Wed Jun 10 14:15:22 2026 +0530", type: "output" });
@@ -935,6 +926,7 @@ export const useTerminal = (toggleTheme, setTerminalMinimized, setThemeMode) => 
           newLogs.push({ text: "─── FEATURED WORK ──────────────────────────────", type: "output" });
           newLogs.push({ text: "  • HSL Dashboard : https://hsl-clinical-dashboard.vercel.app/", type: "output" });
           newLogs.push({ text: "  • Product List  : https://dynamic-productlist.vercel.app/", type: "output" });
+          newLogs.push({ text: "  • BMS Jewels    : https://www.bmsjewels.com/", type: "output" });
           newLogs.push({ text: "────────────────────────────────────────────────", type: "output" });
           break;
 

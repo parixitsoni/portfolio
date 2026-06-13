@@ -135,7 +135,7 @@ export const Explorer = ({
   return (
     <aside className={`
       w-60 md:w-64 bg-slate-100/95 dark:bg-[#050811]/90 backdrop-blur-xl border-r border-slate-200 dark:border-slate-800/80 flex flex-col justify-between shrink-0 z-50 transition-all duration-300 ease-in-out
-      fixed md:relative inset-y-0 left-0 transform md:transform-none
+      absolute md:relative inset-y-0 left-0 transform md:transform-none
       ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
     `}>
       <div className="p-4 overflow-y-auto custom-scrollbar flex-1">

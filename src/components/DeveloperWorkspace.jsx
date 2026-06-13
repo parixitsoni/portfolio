@@ -225,7 +225,7 @@ export const DeveloperWorkspace = () => {
         {sidebarOpen && (
           <div 
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden fixed inset-0 bg-black/65 backdrop-blur-md z-45"
+            className="md:hidden absolute inset-0 bg-black/65 backdrop-blur-md z-45"
           />
         )}
 
