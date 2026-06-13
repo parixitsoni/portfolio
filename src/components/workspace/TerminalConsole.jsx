@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useRef, useCallback } from "react";
+import React, { useContext, useRef, useCallback, useEffect } from "react";
 import { Terminal, ChevronUp, ChevronDown, GripHorizontal } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { formatDisplayPath } from "../../hooks/useTerminal";
@@ -15,66 +15,114 @@ export const TerminalConsole = ({
   handleTerminalSubmit,
   terminalEndRef,
   promptNameMode,
-  customPrompt,     // custom dynamic prompt text
-  handleKeyDown,    // from useTerminal hook
-  currentPath,      // from useTerminal hook
-  suggestionText,   // from useTerminal hook
-  terminalHeight,   // controlled height in px (from DeveloperWorkspace)
-  setTerminalHeight,// setter for resize
-  children,         // Diagnostics panel
+  customPrompt,
+  handleKeyDown,
+  currentPath,
+  suggestionText,
+  terminalHeight,
+  setTerminalHeight,
+  children,
 }) => {
   const { theme } = useContext(ThemeContext);
   const isDark = theme === "dark";
   const displayPath = formatDisplayPath(currentPath || "/home/parixit");
 
-  // ── Drag/Touch-to-resize handler ─────────────────────────────────────────────
-  const handleResizeStart = useCallback((e) => {
-    const isTouch = e.type === "touchstart";
-    const startY = isTouch ? e.touches[0].clientY : e.clientY;
-    const startHeight = terminalHeight;
-    let hasMoved = false;
+  // ── Refs for stale-closure-free access inside pointer event handlers ──────────
+  const minimizedRef = useRef(terminalMinimized);
+  const heightRef    = useRef(terminalHeight);
+  useEffect(() => { minimizedRef.current = terminalMinimized; }, [terminalMinimized]);
+  useEffect(() => { heightRef.current    = terminalHeight;    }, [terminalHeight]);
 
-    const onMove = (ev) => {
-      const currentY = ev.type === "touchmove" ? ev.touches[0].clientY : ev.clientY;
-      const delta = startY - currentY; // drag up = larger terminal
-      
-      if (Math.abs(delta) > 5) {
+  // Grip / drag-strip ref — we attach Pointer Events directly so we can call
+  // setPointerCapture() which gives us smooth tracking even if the pointer
+  // leaves the element on fast drags (mobile & desktop).
+  const gripRef = useRef(null);
+  const mobileGripRef = useRef(null);
+
+  const attachDrag = useCallback((el) => {
+    if (!el) return;
+
+    let startY       = 0;
+    let startHeight  = 0;
+    let hasMoved     = false;
+    let pointerId    = null;
+
+    const onPointerDown = (e) => {
+      // Only handle primary pointer (left button or first touch)
+      if (e.button !== undefined && e.button !== 0) return;
+
+      startY      = e.clientY;
+      startHeight = heightRef.current;
+      hasMoved    = false;
+      pointerId   = e.pointerId;
+
+      // Capture so move/up events always reach us even outside the element
+      try { el.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+
+      e.preventDefault();
+    };
+
+    const onPointerMove = (e) => {
+      if (pointerId === null || e.pointerId !== pointerId) return;
+
+      const delta = startY - e.clientY; // positive = dragging up = taller
+
+      if (Math.abs(delta) > 3) {
         hasMoved = true;
-        if (terminalMinimized && delta > 0) {
+
+        // Expanding from minimized state
+        if (minimizedRef.current && delta > 0) {
           setTerminalMinimized(false);
         }
       }
 
-      if (!terminalMinimized || (hasMoved && delta > 0)) {
-        const maxH = window.innerHeight * 0.75;
-        const newH = Math.max(80, Math.min(maxH, startHeight + delta));
+      if (!minimizedRef.current || (hasMoved && delta > 0)) {
+        const maxH  = window.innerHeight * 0.75;
+        const newH  = Math.max(80, Math.min(maxH, startHeight + delta));
         setTerminalHeight(newH);
       }
+
+      e.preventDefault();
     };
 
-    const onUp = () => {
-      if (isTouch) {
-        document.removeEventListener("touchmove", onMove);
-        document.removeEventListener("touchend", onUp);
-      } else {
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onUp);
-      }
+    const onPointerUp = (e) => {
+      if (pointerId === null || e.pointerId !== pointerId) return;
 
-      // If mouse did not move significantly, toggle minimize/maximize state
+      // Tap (no significant movement) → toggle minimize
       if (!hasMoved) {
-        setTerminalMinimized(prev => !prev);
+        setTerminalMinimized((prev) => !prev);
       }
+
+      pointerId = null;
+      e.preventDefault();
     };
 
-    if (isTouch) {
-      document.addEventListener("touchmove", onMove, { passive: false });
-      document.addEventListener("touchend", onUp);
-    } else {
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
-    }
-  }, [terminalHeight, setTerminalHeight, terminalMinimized, setTerminalMinimized]);
+    el.addEventListener("pointerdown", onPointerDown, { passive: false });
+    el.addEventListener("pointermove", onPointerMove, { passive: false });
+    el.addEventListener("pointerup",   onPointerUp,   { passive: false });
+    el.addEventListener("pointercancel", onPointerUp, { passive: false });
+
+    return () => {
+      el.removeEventListener("pointerdown", onPointerDown);
+      el.removeEventListener("pointermove", onPointerMove);
+      el.removeEventListener("pointerup",   onPointerUp);
+      el.removeEventListener("pointercancel", onPointerUp);
+    };
+  }, [setTerminalMinimized, setTerminalHeight]);
+
+  // Attach drag to desktop grip
+  useEffect(() => {
+    const el = gripRef.current;
+    if (!el) return;
+    return attachDrag(el);
+  }, [attachDrag]);
+
+  // Attach drag to mobile grip
+  useEffect(() => {
+    const el = mobileGripRef.current;
+    if (!el) return;
+    return attachDrag(el);
+  }, [attachDrag]);
 
   return (
     <footer
@@ -84,28 +132,25 @@ export const TerminalConsole = ({
       style={!terminalMinimized ? { height: `${terminalHeight}px` } : undefined}
     >
 
-      {/* ── Desktop title bar + tab switcher (acts as drag handle) ── */}
-      <div
-        onMouseDown={handleResizeStart}
-        onTouchStart={handleResizeStart}
-        className="hidden md:flex h-8 bg-slate-200/90 dark:bg-[#0c121e]/80 border-b border-slate-300 dark:border-slate-800/60 px-3 items-center justify-between shrink-0 w-full select-none cursor-ns-resize hover:bg-slate-300/40 dark:hover:bg-[#0c121e]/100 transition-colors relative"
-      >
-        <div 
-          className="flex items-center gap-2 z-10"
-          onMouseDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-        >
+      {/* ── Desktop: title bar + drag handle ── */}
+      <div className="hidden md:flex h-8 bg-slate-200/90 dark:bg-[#0c121e]/80 border-b border-slate-300 dark:border-slate-800/60 px-3 items-center justify-between shrink-0 w-full select-none transition-colors relative">
+
+        {/* Left section — tabs (not draggable so clicks work) */}
+        <div className="flex items-center gap-2 z-10 pointer-events-auto">
           <Terminal size={11} className="text-sky-600 dark:text-sky-500" />
           <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 font-heading">
             Console
           </span>
-          {/* Inline tab pills */}
           <div className="flex ml-2 gap-0.5">
-            {["terminal", "diagnostics"].map(tab => (
+            {["terminal", "diagnostics"].map((tab) => (
               <button
                 key={tab}
                 type="button"
-                onClick={(e) => { e.stopPropagation(); setFooterTab(tab); setTerminalMinimized(false); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFooterTab(tab);
+                  setTerminalMinimized(false);
+                }}
                 className={`px-2.5 h-5 text-center text-[10px] font-bold font-heading rounded-md transition-all capitalize ${
                   footerTab === tab && !terminalMinimized
                     ? "text-sky-600 dark:text-sky-400 bg-sky-500/10 border border-sky-500/20"
@@ -118,24 +163,26 @@ export const TerminalConsole = ({
           </div>
         </div>
 
-        {/* Centered Grip Icon (visual resizing cue) */}
-        {!terminalMinimized && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        {/* Centre drag strip — full-width invisible overlay behind tabs */}
+        <div
+          ref={gripRef}
+          className="absolute inset-0 z-0 cursor-ns-resize flex items-center justify-center"
+          style={{ touchAction: "none" }}
+          title="Drag to resize"
+        >
+          {!terminalMinimized && (
             <GripHorizontal
               size={12}
-              className="text-slate-400 dark:text-slate-600 opacity-60"
+              className="text-slate-400 dark:text-slate-600 opacity-60 pointer-events-none"
             />
-          </div>
-        )}
+          )}
+        </div>
 
-        <div 
-          className="z-10"
-          onMouseDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-        >
+        {/* Right: minimize button */}
+        <div className="z-10 pointer-events-auto">
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); setTerminalMinimized(!terminalMinimized); }}
+            onClick={() => setTerminalMinimized((p) => !p)}
             className="p-1 rounded text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-300/40 dark:hover:bg-slate-800/60 transition-all cursor-pointer"
           >
             {terminalMinimized ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
@@ -143,51 +190,43 @@ export const TerminalConsole = ({
         </div>
       </div>
 
-      {/* ── Mobile tab headers (acts as drag handle) ── */}
-      <div
-        onMouseDown={handleResizeStart}
-        onTouchStart={handleResizeStart}
-        className="flex md:hidden border-b border-slate-200 dark:border-slate-800/80 bg-slate-200/90 dark:bg-[#0c121e]/50 px-2 shrink-0 w-full justify-between items-center h-9 select-none cursor-ns-resize relative"
-      >
-        <div 
-          className="flex flex-1 h-full z-10"
-          onMouseDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
+      {/* ── Mobile: dedicated drag strip above tab bar ── */}
+      <div className="flex md:hidden flex-col shrink-0 select-none">
+
+        {/* Drag handle strip */}
+        <div
+          ref={mobileGripRef}
+          className="w-full flex items-center justify-center py-1.5 bg-slate-200/90 dark:bg-[#0c121e]/80 cursor-ns-resize active:bg-slate-300/60 dark:active:bg-[#0c121e] transition-colors"
+          style={{ touchAction: "none" }}
+          title="Drag to resize"
         >
-          {["terminal", "diagnostics"].map(tab => (
-            <button
-              key={tab}
-              type="button"
-              onClick={(e) => { e.stopPropagation(); setFooterTab(tab); setTerminalMinimized(false); }}
-              className={`px-4 h-full text-center text-xs font-bold font-heading transition-all capitalize ${
-                footerTab === tab && !terminalMinimized
-                  ? "text-sky-600 dark:text-sky-400 border-b-2 border-sky-500 bg-sky-500/5"
-                  : "text-slate-500 dark:text-slate-400"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+          <div className="w-10 h-1 rounded-full bg-slate-400/60 dark:bg-slate-600/80" />
         </div>
 
-        {/* Centered Grip Icon (visual resizing cue) */}
-        {!terminalMinimized && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-            <GripHorizontal
-              size={12}
-              className="text-slate-400 dark:text-slate-600 opacity-60"
-            />
+        {/* Tab header row */}
+        <div className="border-b border-slate-200 dark:border-slate-800/80 bg-slate-200/60 dark:bg-[#0c121e]/50 px-2 flex w-full justify-between items-center h-8">
+          <div className="flex flex-1 h-full">
+            {["terminal", "diagnostics"].map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => {
+                  setFooterTab(tab);
+                  setTerminalMinimized(false);
+                }}
+                className={`px-4 h-full text-center text-xs font-bold font-heading transition-all capitalize ${
+                  footerTab === tab && !terminalMinimized
+                    ? "text-sky-600 dark:text-sky-400 border-b-2 border-sky-500 bg-sky-500/5"
+                    : "text-slate-500 dark:text-slate-400"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
-        )}
-
-        <div 
-          className="z-10"
-          onMouseDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-        >
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); setTerminalMinimized(!terminalMinimized); }}
+            onClick={() => setTerminalMinimized((p) => !p)}
             className="p-1 rounded text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white mr-1 cursor-pointer"
           >
             {terminalMinimized ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -195,14 +234,11 @@ export const TerminalConsole = ({
         </div>
       </div>
 
-      <div className={`flex-1 flex flex-col overflow-hidden w-full ${
-        isDark ? "bg-[#02050b]" : "bg-white"
-      }`}>
+      {/* ── Console body ── */}
+      <div className={`flex-1 flex flex-col overflow-hidden w-full ${isDark ? "bg-[#02050b]" : "bg-white"}`}>
 
-        {/* Interactive Shell — hidden when diagnostics tab active */}
-        <div className={`flex-1 flex flex-col p-3 overflow-hidden ${
-          footerTab === "terminal" ? "flex" : "hidden"
-        }`}>
+        {/* Terminal shell — shown when terminal tab active */}
+        <div className={`flex-1 flex flex-col p-3 overflow-hidden ${footerTab === "terminal" ? "flex" : "hidden"}`}>
 
           {/* Log stream */}
           <div className="flex-1 overflow-y-auto font-mono text-[11px] space-y-1 custom-scrollbar mb-2 px-1 selection:bg-sky-500/20">
@@ -218,7 +254,6 @@ export const TerminalConsole = ({
                 )}
                 {log.type === "input" && (
                   <span>
-                    {/* Colorized bash prompt in history */}
                     {log.prompt !== undefined && log.prompt !== null && (
                       <>
                         <span className="text-emerald-500 dark:text-emerald-400">parixit</span>
@@ -251,8 +286,7 @@ export const TerminalConsole = ({
                 : "bg-slate-50 border-slate-200"
             }`}
           >
-            {/* Colored bash-style prompt label */}
-            <span 
+            <span
               className="font-mono select-none flex items-center h-full shrink-0 mr-2 whitespace-nowrap leading-none"
               style={{ fontFamily: "'Fira Code', 'Cascadia Code', 'Courier New', monospace", fontSize: "11px", fontWeight: 400 }}
             >
@@ -269,11 +303,10 @@ export const TerminalConsole = ({
               )}
             </span>
 
-            {/* Input wrapper — ghost text positioned RELATIVE to the input */}
             <div className="flex-1 h-full relative flex items-center overflow-hidden">
               {/* Ghost autocomplete overlay */}
               {suggestionText && (
-                <div 
+                <div
                   className="absolute left-0 top-0 h-full flex items-center pointer-events-none select-none font-mono whitespace-pre overflow-hidden text-slate-400 dark:text-slate-600 leading-none"
                   style={{ fontFamily: "'Fira Code', 'Cascadia Code', 'Courier New', monospace", fontSize: "11px", fontWeight: 400 }}
                 >
